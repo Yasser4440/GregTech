@@ -1,5 +1,5 @@
 import fs from "node:fs"
-import { add_comment, add_newline, format_json, make_block } from "./utilities.js"
+import { add_newline, format_json } from "./utilities.js"
 import * as data from "./data.js"
 import { source_directory } from "./local_settings.js"
 console.success = (message) => console.info(`\u001b[32m${message}\u001B[37m`)
@@ -82,35 +82,86 @@ function generate(bp, rp) {
 // Process data.blocks into minecraft blocks
 function make_blocks(bp, rp) {
     // Build blocks.json file
-    const blocks_json = { format_version: [1, 21, 40]}
+    const blocks_json = { format_version: [1, 21, 40] }
     add_newline(blocks_json)
     // Build terrain_textures.json
     const terrain_textures = {
         resource_pack_name: "Gregtech UBP",
         texture_name: "atlas.terrain",
-        _newline_separator: null,
-        texture_data: {}
     }
+    add_newline(terrain_textures)
+    const texture_data = terrain_textures.texture_data = {}
     // Process every block object
     for (const [id, block] of Object.entries(data.blocks)) {
         // Create the bp/blocks json file
         const directory = `${bp}/blocks/${block.folder ? block.folder + '/' : ''}`
         fs.mkdirSync(directory, { recursive: true })
         fs.writeFileSync(`${directory}${block.shorthand}.json`, make_block(id, block))
-        // Process simple textures
+        // Process textures
         if (block.texture && !block.model) {
-            // add the texture to terrain_textures.json
-            terrain_textures.texture_data[block.shorthand] = { textures: `textures/blocks/${block.texture}` }
-            // add the block to blocks.json
-            blocks_json[id] = { textures: block.shorthand}
+            const block_instance = blocks_json[id] = {}
+            // Simple textures
+            if (typeof block.texture == 'string') {
+                // add the texture to terrain_textures.json
+                texture_data[block.shorthand] = {textures: block.texture}
+                // add the block to blocks.json
+                block_instance.textures = block.shorthand
+                // add the texture to flipbook_textures.json
+                add_flipbook(block.shorthand, block.texture)
+            // Complex textures
+            } else {
+                const textures = block_instance.textures = {}
+                for (const [side, texture] of Object.entries(block.texture)) {
+                    // add the texture to terrain_textures.json
+                    texture_data[texture.shorthand] = {textures: texture.path}
+                    // add the block to blocks.json
+                    textures[side] = texture.shorthand
+                    // add the texture to flipbook_textures.json
+                    add_flipbook(texture.shorthand, texture.path)
+                }
+            }
         }
         // Add the display name
-        const english_name = block.shorthand.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-        if (!block.name) translation_keys.push(`tile.${id}.name=${english_name}`)
+        const generated_name = block.shorthand.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+        translation_keys.push(`tile.${id}.name=${block.name ?? generated_name}`)
     }
     // Create the resource pack files
     fs.writeFileSync(`${rp}/blocks.json`, format_json(blocks_json))
     fs.writeFileSync(`${rp}/textures/terrain_texture.json`, format_json(terrain_textures))
+    fs.writeFileSync(`${rp}/textures/flipbook_textures.json`, format_json(Object.values(data.flipbooks)))
+}
+
+function add_flipbook(shorthand, texture) {
+    const flipbook = data.flipbooks[texture]
+    if (flipbook) data.flipbooks[texture] = Object.assign({
+        atlas_tile: shorthand,
+        flipbook_texture: texture
+    }, flipbook)
+}
+
+// Generate a block json file
+function make_block(id, block) {
+    // required fields
+    const json = { format_version: "1.26.30", "minecraft:block": {
+        description: {
+            identifier: id,
+            // TODO: remove this and add category support
+            menu_category: { category: "items" }
+        }
+    }}
+    const components = {}
+    // geometry & material_instances
+    if (block.model) {
+        components["minecraft:geometry"] = block.geometry
+        components["minecraft:material_instances"] = block.model
+    }
+    // TODO: add states, and permutations
+
+
+    // components
+    if (Object.keys(components).length) json["minecraft:block"].components = components
+
+    return format_json(json)
 }
 
 // Run the command

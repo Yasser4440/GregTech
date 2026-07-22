@@ -16,7 +16,11 @@ export function format_json(json, indent = '') {
         return `[\n${items.join(',\n')}\n${indent}]`
     }
     // Objects
-    const entries = Object.keys(json).map(key => {
+    const keys = Object.keys(json).filter(key => json[key] !== undefined && key != '_inline')
+    // Inlined Objects
+    if (json._inline) return `{${keys.map(key => `"${key}": ${format_json(json[key], indent)}`).join(', ')}}`
+    // Not inlined Objects
+    const entries = keys.map(key => {
         // New Lines
         if (key.startsWith('_newline')) return null
         // Comments
@@ -35,12 +39,3 @@ export function format_json(json, indent = '') {
 let metadata_index = 0
 export const add_newline = (json) => json['_newline' + metadata_index++] = null
 export const add_comment = (json, comment) => json['_comment' + metadata_index++] = comment
-
-export function make_block(id, block) {
-    const json = { format_version: "1.26.30", "minecraft:block": {
-        description: { identifier: id }
-        // TODO: add states, components, and permutations
-    }}
-    
-    return format_json(json)
-}
