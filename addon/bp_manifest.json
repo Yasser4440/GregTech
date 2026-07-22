@@ -1,0 +1,39 @@
+
+{
+	"format_version": 2,
+	"header": {
+        "name": "Gregtech UBP",
+        "description": "The unofficial bedrock port of Gregtech.",
+		"uuid": "47a36022-9ef1-4c85-b496-e91be3f45077",
+        "version": [0, 0, 1],
+		"min_engine_version": [1, 26, 30]
+	},
+	"metadata": { "product_type": "addon" },
+	"modules": [
+		{
+			"type": "data",
+			"uuid": "03e523e2-9240-40b3-9f0f-9d000c6acc32",
+            "version": [1, 0, 0]
+		},
+		{
+			"type": "script",
+			"entry": "scripts/main.js",
+			"uuid": "9d55727d-6e23-4ead-afdc-761cdbdf5110",
+            "version": [2, 0, 0]
+		}
+	],
+	"dependencies": [
+		{
+			"module_name": "@minecraft/server",
+			"version": "2.9.0-beta"
+		},
+		{
+			"module_name": "@minecraft/server-ui",
+			"version": "2.2.0-beta"
+		},
+		{
+			"uuid": "5ee0b648-f3aa-4435-a11d-5583ed20e33a",
+			"version": [0, 0, 1]
+		}
+	]
+}
