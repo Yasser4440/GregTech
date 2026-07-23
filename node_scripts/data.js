@@ -18,8 +18,8 @@ const item_categories = {
             'gregtech:chemically_inert_ptfe_machine_casing': {},
             'gregtech:frost_proof_aluminium_machine_casing': {},
             'gregtech:palladium_substation': {},
-            'gregtech:stainless_evaporation_casing': {},
             'gregtech:sturdy_hsse_machine_casing': {},
+            // 'gregtech:stainless_evaporation_casing': {},
         }
     },
     "gregtech_voltage_casings": {

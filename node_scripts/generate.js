@@ -17,6 +17,51 @@ function make_textures() {
     }
 }
 
+function rename_items(folder) {
+    if (!folder) return
+    const files = fs.readdirSync(folder)
+    if (!fs.existsSync(`${folder}/overlay`)) fs.mkdirSync(`${folder}/overlay`)
+    if (!fs.existsSync(`${folder}/secondary`)) fs.mkdirSync(`${folder}/secondary`)
+    files.forEach(file => {
+        if (!file.endsWith('.png')) return
+        const file_path = `${folder}/${file}`
+        file = file.replace('ingot_hot', 'hot_ingot')
+        file = file.replace('rod_long', 'long_rod')
+        file = file.replace('dust_tiny', 'tiny_dust')
+        file = file.replace('dust_small', 'small_dust')
+        file = file.replace('dust_small', 'small_dust')
+        file = file.replace('crushed_refined', 'refined_ore')
+        file = file.replace('crushed_purified', 'purified_ore')
+        file = file.replace('dust_impure', 'impure_dust')
+        file = file.replace('dust_pure', 'pure_dust')
+        file = file.replace('wire_fine', 'fine_wire')
+        file = file.replace('ingot_double', 'double_ingot')
+        file = file.replace('plate_double', 'double_plate')
+        file = file.replace('plate_dense', 'dense_plate')
+        file = file.replace('spring_small', 'small_spring')
+        file = file.replace('gem_chipped', 'chipped_gem')
+        file = file.replace('gem_flawed', 'flawed_gem')
+        file = file.replace('gem_flawless', 'flawless_gem')
+        file = file.replace('gem_exquisite', 'exquisite_gem')
+        if (file.includes('tool_head_')) {
+            file = file.replace('tool_head_', '').replace('.png', '_tool_head.png')
+        }
+        const sections = file.split('_')
+        const last = sections.length - 1
+        let subfolder = '', prefix = sections[0] == folder ? '' : `${folder}_`
+        sections[last] = sections[last].replace('.png', '')
+        if (sections[last] == 'overlay') {
+            sections.pop()
+            subfolder = 'overlay/'
+        }
+        else if (sections[last] == 'secondary') {
+            sections.pop()
+            subfolder = 'secondary/'
+        }
+    fs.renameSync(file_path, `${folder}/${subfolder}${prefix}${sections.join('_')}.png`)
+    })
+}
+
 function make_flipbooks() {
     const json = {}
 
@@ -54,6 +99,7 @@ switch (process.argv[2]) {
     case 'textures': { make_textures() } break
     case 'flipbooks': { make_flipbooks() } break
     case 'debug': { debug() } break
+    case 'rename': { rename_items(process.argv[3]) } break
     
     default: console.error(`Unexpected argument: ${process.argv[2]}`)
 }
