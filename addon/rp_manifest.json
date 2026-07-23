@@ -1,8 +1,8 @@
 {
 	"format_version": 2,
 	"header": {
-        "name": "Gregtech UBP",
-        "description": "The unofficial bedrock port of Gregtech.",
+        "name": "GregTech UBP",
+        "description": "The unofficial bedrock port of GregTech.",
         "uuid": "5ee0b648-f3aa-4435-a11d-5583ed20e33a",
         "version": [0, 0, 1],
 		"min_engine_version": [ 1, 26, 30 ],

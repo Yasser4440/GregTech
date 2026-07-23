@@ -86,7 +86,7 @@ function make_blocks(bp, rp) {
     add_newline(blocks_json)
     // Build terrain_textures.json
     const terrain_textures = {
-        resource_pack_name: "Gregtech UBP",
+        resource_pack_name: "GregTech UBP",
         texture_name: "atlas.terrain",
     }
     add_newline(terrain_textures)
