@@ -9,12 +9,12 @@ const { dust, purified_ore} = material_shapes
 
 const { chalcopyrite, chalcocite, bornite, tetrahedrite, pentlandite, sheldonite } = ores
 const {
+    platinum, palladium, rhodium, ruthenium, iridium, osmium, // products
     hydrogen, oxygen, chlorine, carbon,
-    platinum, palladium, rhodium, ruthenium, iridium, osmium,
 } = elements
 const {
-    sulfuric_acid, hydrochloric_acid, nitric_acid, aqua_regia,
-    ammonium_chloride, sulfur_trioxide, carbon_dioxide, water
+    sulfuric_acid, hydrochloric_acid, nitric_acid, aqua_regia, // acids
+    ammonium_chloride, sulfur_trioxide, carbon_dioxide, water // byproducts
 } = chemicals
 const {
     platinum_group_sludge, sulfuric_copper_solution, sulfuric_nickel_solution,
