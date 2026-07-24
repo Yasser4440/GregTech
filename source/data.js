@@ -11,3 +11,23 @@ export const material_textures = {
     lignite: 'lignite', quartz: 'quartz', certus: 'certus', lapis: 'lapis', flint: 'flint',
     magnetic: 'magnetic', radioactive: 'radioactive'
 };
+
+export const material_shapes = {
+    raw_ore: 'raw_ore',
+    crushed_ore: 'crushed_ore',
+    purified_ore: 'purified_ore',
+    refined_ore: 'refined_ore',
+
+    dust: 'dust',
+    small_dust: 'small_dust',
+    tiny_dust: 'tiny_dust',
+}
+
+export const recipe_types = {
+    chemical_reactor: 'chemical_reactor',
+    mixer: 'mixer',
+    centrifuge: 'centrifuge',
+    electrolyzer: 'electrolyzer',
+    large_chemical_reactor: 'large_chemical_reactor',
+    distillation_tower: 'distillation_tower',
+};

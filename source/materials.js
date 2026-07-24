@@ -879,3 +879,20 @@ export const elements = {
 
 // Sort them once finished
 }; Object.assign(materials, elements)
+
+export const ores = {
+    chalcopyrite: {
+        forms: [dust, ore],
+        color: [0x96c185, 0xe3af1a],
+        compound: ['copper', 'iron', ['sulfur', 2]],
+    }
+}; Object.assign(materials, ores)
+
+export const chemicals = {
+
+}; Object.assign(materials, chemicals)
+
+export const intermediaries = {
+    // Platline
+    // Other
+}; Object.assign(materials, intermediaries)
