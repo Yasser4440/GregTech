@@ -1,4 +1,5 @@
-import { material_textures, voltage_tiers,  } from "./data"
+import { booster_gases, enchantments, material_forms, material_shapes, material_textures, voltage_tiers,  } from "./data.js"
+
 
 const {ULV, LV, MV, HV, EV, IV, LuV, ZPM, UV, UHV, UEV, UIV, UXV, OpV, MAX} = voltage_tiers
 
@@ -12,29 +13,40 @@ const {
     sand: sand_texture, wood: wood_texture,
 } = material_textures
 
+
 // Material Forms:
-const dust = 'dust', ingot = 'ingot', ore = 'ore'
-const liquid = 'liquid', gas = 'gas', plasma = 'plasma', fluid = 'fluid'
+const { dust, ore, gem, ingot, fluid, liquid, gas, plasma } = material_forms
 
 // Material Attributes:
 const acidic = 'acidic', emissive_ore = 'emissive_ore'
-const CUSTOM_STILL_TEXTURE = 'CUSTOM_STILL_TEXTURE'
+const CUSTOM_STILL_TEXTURE = 'CUSTOM_STILL_TEXTURE', MORTAR_MATERIAL = 'MORTAR_MATERIAL', NO_FLUID_COLOR = 'NO_FLUID_COLOR'
+const HAZARD_NOT_APPLIED_TO_DERIVATIVES = 'HAZARD_NOT_APPLIED_TO_DERIVATIVES', SUPERCONDUCTOR = 'SUPERCONDUCTOR'
+
+const { bane_of_arthropods, smite, efficiency, fortune } = enchantments
 
 
 // Material Flags:
 const EXT2_METAL = 'EXT2_METAL', GENERATE_GEAR = 'GENERATE_GEAR', GENERATE_SMALL_GEAR = 'GENERATE_SMALL_GEAR'
 const GENERATE_RING = 'GENERATE_RING', GENERATE_FRAME = 'GENERATE_FRAME', GENERATE_SPRING = 'GENERATE_SPRING'
-const GENERATE_SPRING_SMALL = 'GENERATE_RING', GENERATE_FINE_WIRE = 'GENERATE_FRAME', EXT_METAL = 'EXT_METAL'
+const GENERATE_SPRING_SMALL = 'GENERATE_SPRING_SMALL', GENERATE_FINE_WIRE = 'GENERATE_FINE_WIRE', EXT_METAL = 'EXT_METAL'
 const GENERATE_FOIL = 'GENERATE_FOIL', MORTAR_GRINDABLE = 'MORTAR_GRINDABLE', STD_METAL = 'STD_METAL'
 const GENERATE_ROTOR = 'GENERATE_ROTOR', EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES = 'EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES'
 const GENERATE_BOLT_SCREW = 'GENERATE_BOLT_SCREW', GENERATE_ROD = 'GENERATE_ROD', GENERATE_LONG_ROD = 'GENERATE_LONG_ROD'
-const GENERATE_ROUND = 'GENERATE_ROUND', ____________ = '___________', _________ = '__________'
-const ______________ = '___________', _____________ = '___________', __________ = '__________'
+const GENERATE_ROUND = 'GENERATE_ROUND', FLAMMABLE = 'FLAMMABLE', BLAST_FURNACE_CALCITE_TRIPLE = 'BLAST_FURNACE_CALCITE_TRIPLE'
+const GENERATE_DENSE = 'GENERATE_DENSE', DECOMPOSITION_BY_CENTRIFUGING = 'DECOMPOSITION_BY_CENTRIFUGING', NO_SMELTING = 'NO_SMELTING'
+const DISABLE_DECOMPOSITION = 'DISABLE_DECOMPOSITION', BLAST_FURNACE_CALCITE_DOUBLE = 'BLAST_FURNACE_CALCITE_DOUBLE', NO_SMASHING = 'NO_SMASHING'
+const HIGH_SIFTER_OUTPUT = 'HIGH_SIFTER_OUTPUT', CRYSTALLIZABLE = 'CRYSTALLIZABLE', GENERATE_LENS = 'GENERATE_LENS'
+const GENERATE_PLATE = 'GENERATE_PLATE', DECOMPOSITION_BY_ELECTROLYZING = 'DECOMPOSITION_BY_ELECTROLYZING', ___ = '__________'
+const ____ = '___________', _____ = '___________', ______ = '__________'
+const _______ = '___________', ___________ = '___________', _________ = '__________'
+const __________ = '___________', ____________ = '___________', _____________ = '__________'
+const ________________ = '___________', _________________ = '___________', __________________ = '__________'
+const ______________ = '___________', _______________ = '___________', ________ = '__________'
 
 // Hazard Triggers
 const INHALATION = 'INHALATION', ANY = 'ANY', SKIN_CONTACT = 'SKIN_CONTACT'
 // Hazard Types
-const ARSENICOSIS = 'ARSENICOSIS', POISON = 'POISON', CARCINOGEN = 'CARCINOGEN', WEAK_POISON = 'WEAK_POISON'
+const ARSENICOSIS = 'ARSENICOSIS', POISON = 'POISON', CARCINOGEN = 'CARCINOGEN', WEAK_POISON = 'WEAK_POISON', CHEMICAL_BURNS = 'CHEMICAL_BURNS'
 
 // Tool Properties
 const unbreakable = 'unbreakable', magnetic_tool = 'magnetic'
@@ -43,8 +55,12 @@ const unbreakable = 'unbreakable', magnetic_tool = 'magnetic'
 const gas_proof = 'gas_proof', acid_proof = 'acid_proof'
 const cryogenic_proof = 'cryogenic_proof', plasma_proof = 'plasma_proof'
 
-// Blasting Inert Gases:
-const nitrogen = 'nitrogen', helium = 'helium', argon = 'argon'
+// Blast Furnace Booster Gases:
+const nitrogen_boost = booster_gases.nitrogen.gas
+const helium_boost = booster_gases.helium.gas
+const argon_boost = booster_gases.argon.gas
+const neon_boost = booster_gases.neon.gas
+const krypton_boost = booster_gases.krypton.gas
 
 // Localization Keys
 const FLUID_GENERIC = 'FLUID_GENERIC', LIQUID_GENERIC = 'LIQUID_GENERIC'
@@ -152,7 +168,7 @@ export const elements = {
         rotor_stats: { power: 100, efficiency: 140, damage: 2, durability: 128 },
         cable_stats: { voltage: EV, amperage: 1, loss: 1 },
         fluid_pipe: { temperature: 1166, throughput: 100, properties: [gas_proof] },
-        blasting: { temperature: 1700, inert_gas: nitrogen},
+        blasting: { temperature: 1700, booster_gas: nitrogen_boost},
         element: {symbol: 'Al', p: 13, n: 13},
     },
     silicon: {
@@ -177,7 +193,7 @@ export const elements = {
         forms: [gas],
         properties: { fluid_state: gas },
         attributes: [CUSTOM_STILL_TEXTURE],
-        hazard: TODO,
+        // hazard: TODO,
         element: {symbol: 'Cl', p: 17, n: 18},
     },
     argon: {
@@ -209,14 +225,14 @@ export const elements = {
         armor_stats: { protection: [4, 9, 7, 4], toughness: 5, knockback_resistance: 0.4, durability_multiplier: 48, enchantability: 18 },
         rotor_stats: { power: 130, efficiency: 115, damage: 3, durability: 1600 },
         fluid_pipe: { temperature: 2426, throughput: 150, properties: [gas_proof] },
-        blasting: { temperature: 1941, voltage: HV, duration: 1500, inert_gas: helium },
+        blasting: { temperature: 1941, voltage: HV, duration: 1500, booster_gas: helium_boost },
         cooling: { voltage: HV },
         element: {symbol: 'Ti', p: 22, n: 26},
     },
     vanadium: {
         forms: [ingot, fluid],
         color: [0x696d76, 0x240808], texture: metallic,
-        blasting: { temperature: 2183, inert_gas: helium },
+        blasting: { temperature: 2183, booster_gas: helium_boost },
         element: {symbol: 'V', p: 23, n: 28},
     },
     chromium: {
@@ -226,7 +242,7 @@ export const elements = {
         flags: [EXT_METAL, GENERATE_ROTOR],
         rotor_stats: { power: 130, efficiency: 155, damage: 3, durability: 512 },
         fluid_pipe: { temperature: 2180, throughput: 35, properties: [gas_proof, acid_proof] },
-        blasting: { temperature: 1700, inert_gas: nitrogen},
+        blasting: { temperature: 1700, booster_gas: nitrogen_boost},
         hazard: { trigger: SKIN_CONTACT, type: CARCINOGEN},
         element: {symbol: 'Cr', p: 24, n: 28},
     },
@@ -269,7 +285,7 @@ export const elements = {
     },
     copper: {
         forms: [ingot, liquid, ore],
-        properties: { harvest_level: 1, temperature: 1358, arc_smelting_material: annealed_copper },
+        properties: { harvest_level: 1, temperature: 1358, arc_smelting_material: 'annealed_copper' },
         color: [0xe77c56, 0xe4673e], texture: bright,
         flags: [EXT_METAL, MORTAR_GRINDABLE, GENERATE_SPRING, GENERATE_SPRING_SMALL, GENERATE_RING, GENERATE_FINE_WIRE, GENERATE_ROTOR],
         cable_stats: { voltage: MV, amperage: 1, loss: 2 },
@@ -339,7 +355,7 @@ export const elements = {
     niobium: {
         forms: [ingot, fluid],
         color: [0xb494b4, 0x4b3f4d], texture: bright,
-        blasting: { temperature: 2750, voltage: HV, duration: 900, inert_gas: helium },
+        blasting: { temperature: 2750, voltage: HV, duration: 900, booster_gas: helium_boost },
         element: {symbol: 'Nb', p: 41, n: 53},
     },
     molybdenum: {
@@ -359,7 +375,7 @@ export const elements = {
         forms: [ingot, fluid],
         color: [0xa2cde0, 0x3c7285], texture: shiny,
         flags: [GENERATE_FOIL, GENERATE_GEAR],
-        blasting: { temperature: 2607, voltage: EV, duration: 900, inert_gas: helium },
+        blasting: { temperature: 2607, voltage: EV, duration: 900, booster_gas: helium_boost },
         cooling: { voltage: HV, duration: 200 },
         element: {symbol: 'Ru', p: 44, n: 57},
     },
@@ -367,7 +383,7 @@ export const elements = {
         forms: [ingot, fluid],
         color: [0xfd46b1, 0xDC0C58], texture: bright,
         flags: [EXT2_METAL, GENERATE_GEAR, GENERATE_FINE_WIRE],
-        blasting: { temperature: 2237, voltage: EV, duration: 1200, inert_gas: helium },
+        blasting: { temperature: 2237, voltage: EV, duration: 1200, booster_gas: helium_boost },
         cooling: { voltage: HV },
         element: {symbol: 'Rh', p: 45, n: 58},
     },
@@ -375,7 +391,7 @@ export const elements = {
         forms: [ingot, fluid, ore],
         color: [0xbd92b5, 0x535b14], texture: shiny,
         flags: [EXT_METAL, GENERATE_FOIL, GENERATE_FINE_WIRE],
-        blasting: { temperature: 1828, voltage: HV, duration: 900, inert_gas: nitrogen },
+        blasting: { temperature: 1828, voltage: HV, duration: 900, booster_gas: nitrogen_boost },
         cooling: { voltage: HV, duration: 150 },
         element: {symbol: 'Pd', p: 46, n: 60},
     },
@@ -461,7 +477,7 @@ export const elements = {
         flags: [STD_METAL, GENERATE_ROD, GENERATE_BOLT_SCREW],
         element: {symbol: 'Nd', p: 60, n: 84},
         rotor_stats: { power: 100, efficiency: 115, damage: 2, durability: 512 },
-        blasting: { temperature: 1297, inert_gas: helium },
+        blasting: { temperature: 1297, booster_gas: helium_boost },
     },
     promethium: {
         color: [0x814947, 0xd0ff71], texture: radioactive,
@@ -473,7 +489,7 @@ export const elements = {
         properties: { temperature: 1345 },
         color: [0xc2c289, 0x235254], texture: metallic,
         flags: [GENERATE_LONG_ROD],
-        blasting: { temperature: 5400, voltage: EV, duration: 1500, inert_gas: argon },
+        blasting: { temperature: 5400, voltage: EV, duration: 1500, booster_gas: argon_boost },
         cooling: { voltage: HV, duration: 200 },
         element: {symbol: 'Sm', p: 62, n: 88},
     },
@@ -484,7 +500,7 @@ export const elements = {
         flags: [STD_METAL, GENERATE_LONG_ROD, GENERATE_FINE_WIRE, GENERATE_SPRING, GENERATE_SPRING_SMALL, GENERATE_FOIL, GENERATE_FRAME],
         cable_stats: { voltage: UHV, amperage: 2, loss: 32 },
         fluid_pipe: { temperature: 7750, throughput: 300, properties: [gas_proof]},
-        blasting: { temperature: 6000, voltage: IV, duration: 180, inert_gas: helium },
+        blasting: { temperature: 6000, voltage: IV, duration: 180, booster_gas: helium_boost },
         cooling: { voltage: HV },
         element: {symbol: 'Eu', p: 63, n: 88},
     },
@@ -541,7 +557,7 @@ export const elements = {
         rotor_stats: { power: 130, efficiency: 115, damage: 3, durability: 2560 },
         cable_stats: { voltage: IV, amperage: 2, loss: 2 },
         fluid_pipe: { temperature: 4618, throughput: 50, properties: [gas_proof, acid_proof, plasma_proof] },
-        blasting: { temperature: 3600, voltage: EV, duration: 1800, inert_gas: helium },
+        blasting: { temperature: 3600, voltage: EV, duration: 1800, booster_gas: helium_boost },
         cooling: { voltage: HV, duration: 300 },
         element: {symbol: 'W', p: 74, n: 109},
     },
@@ -557,7 +573,7 @@ export const elements = {
         rotor_stats: { power: 160, efficiency: 185, damage: 4, durability: 1280 },
         cable_stats: { voltage: LuV, amperage: 4, loss: 2 },
         item_pipe: { speed: 8, priority: 256 },
-        blasting: { temperature: 4500, voltage: LuV, duration: 1000, inert_gas: argon },
+        blasting: { temperature: 4500, voltage: LuV, duration: 1000, booster_gas: argon_boost },
         cooling: { voltage: EV, duration: 300 },
         element: {symbol: 'Os', p: 76, n: 114},
     },
@@ -568,7 +584,7 @@ export const elements = {
         flags: [EXT2_METAL, GENERATE_FINE_WIRE, GENERATE_GEAR, GENERATE_FRAME],
         rotor_stats: { power: 130, efficiency: 115, damage: 3, durability: 2560 },
         fluid_pipe: { temperature: 3398, throughput: 250, properties: [gas_proof, cryogenic_proof]},
-        blasting: { temperature: 4500, voltage: IV, duration: 1100, inert_gas: argon },
+        blasting: { temperature: 4500, voltage: IV, duration: 1100, booster_gas: argon_boost },
         cooling: { voltage: EV, duration: 250 },
         element: {symbol: 'Ir', p: 77, n: 115},
     },
@@ -824,7 +840,7 @@ export const elements = {
         color: [0x81808a, 0x351d4b], texture: shiny,
         flags: [GENERATE_FOIL, GENERATE_BOLT_SCREW, GENERATE_GEAR, GENERATE_SPRING],
         cable_stats: { voltage: ZPM, amperage: 6, loss: 4 },
-        blasting: { temperature: 7200, voltage: LuV, duration: 1500, inert_gas: argon },
+        blasting: { temperature: 7200, voltage: LuV, duration: 1500, booster_gas: argon_boost },
         cooling: { voltage: IV, duration: 300 },
         element: {symbol: 'Ke', p: 125, n: 198},
     },
@@ -837,7 +853,7 @@ export const elements = {
         rotor_stats: { power: 160, efficiency: 105, damage: 4, durability: 1280 },
         cable_stats: { voltage: ZPM, amperage: 2, loss: 2 },
         fluid_pipe: { temperature: 3776, throughput: 200, properties: [gas_proof, cryogenic_proof, plasma_proof] },
-        blasting: { temperature: 5000, voltage: IV, duration: 600, inert_gas: argon },
+        blasting: { temperature: 5000, voltage: IV, duration: 600, booster_gas: argon_boost },
         cooling: { voltage: EV, duration: 150 },
         element: {symbol: 'Nq', p: 174, n: 352},
     },
@@ -847,7 +863,7 @@ export const elements = {
         attributes: [CUSTOM_STILL_TEXTURE, NO_FLUID_COLOR],
         color: [0x3C3C3C, 0x122f06], texture: metallic,
         flags: [EXT_METAL, GENERATE_FOIL],
-        blasting: { temperature: 7000, voltage: IV, duration: 1000, inert_gas: argon },
+        blasting: { temperature: 7000, voltage: IV, duration: 1000, booster_gas: argon_boost },
         cooling: { voltage: EV, duration: 150 },
         element: {symbol: 'Nq+', p: 174, n: 354},
     },
@@ -857,7 +873,7 @@ export const elements = {
         attributes: [CUSTOM_STILL_TEXTURE],
         color: [0x1E1E1E, false, 0x59b3ff], texture: radioactive,
         flags: [EXT_METAL, GENERATE_FOIL, GENERATE_GEAR, GENERATE_FINE_WIRE, GENERATE_BOLT_SCREW],
-        blasting: { temperature: 9000, voltage: ZPM, duration: 1200, inert_gas: argon },
+        blasting: { temperature: 9000, voltage: ZPM, duration: 1200, booster_gas: argon_boost },
         cooling: { voltage: LuV, duration: 200 },
         hazard: { radioactive: 3 },
         element: {symbol: '*Nq*', p: 174, n: 348},
@@ -890,174 +906,174 @@ export const ores = {
         forms: [ore],
         properties: { harvest_level: 1 },
         color: [0x96c185, 0xe3af1a],
-        compound: [copper, iron, [sulfur, 2]],
+        compound: ['copper', 'iron', ['sulfur', 2]],
     },
     asbestos: {
         forms: [ore],
         properties: { harvest_level: 1, ore_yield: 3 },
         color: [0xE6E6E6, 0xdbd7bf],
-        compound: [[magnesium, 3], [silicon, 2], [hydrogen, 4], [oxygen, 9]],
+        compound: [['magnesium', 3], ['silicon', 2], ['hydrogen', 4], ['oxygen', 9]],
         // .hazard(HazardProperty.HazardTrigger.INHALATION, GTMedicalConditions.ASBESTOSIS)
     },
     hematite: {
         forms: [ore],
         color: [0xff7161, 0x330817],
-        compound: [[iron, 2], [oxygen, 3]],
+        compound: [['iron', 2], ['oxygen', 3]],
     },
     goethite: {
         forms: [ore],
         properties: { harvest_level: 1 },
         color: [0x97873a, 0x313131], texture: metallic,
         flags: [DECOMPOSITION_BY_CENTRIFUGING, BLAST_FURNACE_CALCITE_TRIPLE],
-        compound: [iron, hydrogen, [oxygen, 2]],
+        compound: ['iron', 'hydrogen', ['oxygen', 2]],
     },
     calcite: {
         forms: [ore],
         properties: { harvest_level: 1 },
         color: [0xfffef8, 0xbbaf62],
-        compound: [calcium, carbon, [oxygen, 3]],
+        compound: ['calcium', 'carbon', ['oxygen', 3]],
     },
     cassiterite: {
         forms: [ore],
         properties: { harvest_level: 1, ore_yield: 2 },
         color: [0x89847e, 0x3b3b35], texture: rough,
-        compound: [tin, [oxygen, 2]],
+        compound: ['tin', ['oxygen', 2]],
     },
     cassiterite_sand: {
         forms: [ore],
         properties: { harvest_level: 1, ore_yield: 2 },
         color: [0x89847e, 0x3b3b35], texture: sand_texture,
-        compound: [tin, [oxygen, 2]],
+        compound: ['tin', ['oxygen', 2]],
     },
     sheldonite: { // original id was cooperite
         name: 'Sheldonite', 
         forms: [ore],
         properties: { harvest_level: 1 },
         color: [0xe9ffa7, 0x665f2f], texture: metallic,
-        compound: [[platinum, 3], nickel, sulfur, palladium],
+        compound: [['platinum', 3], 'nickel', 'sulfur', 'palladium'],
     },
     chromite: {
         forms: [ore],
         properties: { harvest_level: 1 },
         color: [0xc5c1a8, 0x4c1a69], texture: metallic,
-        compound: [iron, [chromium, 2], [oxygen, 4]],
+        compound: ['iron', ['chromium', 2], ['oxygen', 4]],
     },
     cobaltite: {
         forms: [ore],
         properties: { harvest_level: 1 },
         color: [0x1975ff, 0x56071f], texture: metallic,
-        compound: [cobalt, arsenic, sulfur],
+        compound: ['cobalt', 'arsenic', 'sulfur'],
     },
     galena: {
         forms: [ore],
         properties: { harvest_level: 3 },
         color: [0xf3e8fa, 0x331d42], texture: metallic,
         flags: [NO_SMELTING],
-        compound: [lead, sulfur],
+        compound: ['lead', 'sulfur'],
     },
     garnierite: {
         forms: [ore],
         properties: { harvest_level: 3 },
         color: [0x32c880, 0x344028], texture: metallic,
-        compound: [nickel, oxygen],
+        compound: ['nickel', 'oxygen'],
     },
     ilmenite: {
         forms: [ore],
         properties: { harvest_level: 3 },
         color: [0x2b2a24, 0x2b1700], texture: metallic,
         flags: [DISABLE_DECOMPOSITION],
-        compound: [iron, titanium, [oxygen, 3]],
+        compound: ['iron', 'titanium', ['oxygen', 3]],
     },
     bauxite: {
         forms: [ore],
         properties: { harvest_level: 1 },
         color: [0xcfb853, 0xe6220c],
         flags: [DISABLE_DECOMPOSITION],
-        compound: [[aluminium, 2], [oxygen, 3]],
+        compound: [['aluminium', 2], ['oxygen', 3]],
     },
     magnesite: {
         forms: [ore],
         color: [0xfbfbf6, 0x80705e], texture: rough,
-        compound: [magnesium, carbon, [oxygen, 3]],
+        compound: ['magnesium', 'carbon', ['oxygen', 3]],
     },
     magnetite: {
         forms: [ore],
         color: [0x9d9d9d, 0x06070e], texture: metallic,
-        compound: [[iron, 3], [oxygen, 4]],
+        compound: [['iron', 3], ['oxygen', 4]],
     },
     molybdenite: {
         forms: [ore],
         color: [0xe3ddc3, 0x191919], texture: metallic,
-        compound: [molybdenum, [sulfur, 2]],
+        compound: ['molybdenum', ['sulfur', 2]],
     },
     wulfenite: {
         forms: [ore],
         properties: { harvest_level: 3 },
         color: [0xff9000, 0xFF0000],
-        compound: [lead, molybdenum, [oxygen, 4]],
+        compound: ['lead', 'molybdenum', ['oxygen', 4]],
     },
     powellite: {
         forms: [ore],
         color: [0xd8cfac, 0xbc7a2c],
-        compound: [calcium, molybdenum, [oxygen, 4]],
+        compound: ['calcium', 'molybdenum', ['oxygen', 4]],
     },
     pyrite: {
         forms: [ore],
         properties: { harvest_level: 1 },
         color: [0xfffee6, 0xb69f4e], texture: rough,
         flags: [BLAST_FURNACE_CALCITE_DOUBLE],
-        compound: [iron, [sulfur, 2]],
+        compound: ['iron', ['sulfur', 2]],
     },
     pyrolusite: {
         forms: [ore],
         color: [0xc7b5ab, 0x595756],
-        compound: [manganese, [oxygen, 2]],
+        compound: ['manganese', ['oxygen', 2]],
     },
     saltpeter: {
         forms: [ore],
         properties: { harvest_level: 1, ore_yield: 2 },
         color: [0xE6E6E6, 0xe6e1cf], texture: fine,
         flags: [NO_SMASHING, NO_SMELTING, FLAMMABLE],
-        compound: [potassium, nitrogen, [oxygen, 3]],
+        compound: ['potassium', 'nitrogen', ['oxygen', 3]],
     },
     scheelite: {
         forms: [ore],
         properties: { harvest_level: 3 },
         color: [0xd7e8b3, 0x143cae],
         flags: [DISABLE_DECOMPOSITION],
-        compound: [calcium, tungsten, [oxygen, 4]],
+        compound: ['calcium', 'tungsten', ['oxygen', 4]],
         formula: 'Ca(WO3)O',
     },
     tantalite: {
         forms: [ore],
         properties: { harvest_level: 3 },
         color: [0x4e6b94, 0x632300], texture: metallic,
-        compound: [manganese, [tantalum, 2], [oxygen, 6]],
+        compound: ['manganese', ['tantalum', 2], ['oxygen', 6]],
     },
     sphalerite: {
         forms: [ore],
         properties: { harvest_level: 1 },
         color: [0xffdc88, 0x0f1605],
         flags: [DISABLE_DECOMPOSITION],
-        compound: [zinc, sulfur],
+        compound: ['zinc', 'sulfur'],
     },
     stibnite: {
         forms: [ore],
         color: [0x656565, 0x0a1432], texture: metallic,
         flags: [DECOMPOSITION_BY_CENTRIFUGING],
-        compound: [[antimony, 2], [sulfur, 3]],
+        compound: [['antimony', 2], ['sulfur', 3]],
     },
     tetrahedrite: {
         forms: [ore],
         color: [0xa3a09b, 0x143313],
-        compound: [[copper, 2], iron, antimony, [sulfur, 3]],
+        compound: [['copper', 2], 'iron', 'antimony', ['sulfur', 3]],
     },
     tungstate: {
         forms: [ore],
         properties: { harvest_level: 3 },
         color: [0xe0ffc4, 0xab4400],
         flags: [DISABLE_DECOMPOSITION],
-        compound: [tungsten, [lithium, 2], [oxygen, 4]],
+        compound: ['tungsten', ['lithium', 2], ['oxygen', 4]],
         formula: 'Li2(WO3)O',
     },
     uraninite: {
@@ -1066,7 +1082,7 @@ export const ores = {
         attributes: [emissive_ore],
         color: [0xffd52e, 0x17212b], texture: metallic,
         flags: [DISABLE_DECOMPOSITION],
-        compound: [elements.uranium, [oxygen, 2]],
+        compound: ['uranium', ['oxygen', 2]],
         formula: 'UO2'
     },
     yellow_limonite: {
@@ -1074,92 +1090,92 @@ export const ores = {
         forms: [ore],
         color: [0xf5e315, 0xc06f33], texture: metallic,
         flags: [DECOMPOSITION_BY_CENTRIFUGING, BLAST_FURNACE_CALCITE_DOUBLE],
-        compound: [iron, hydrogen, [oxygen, 2]],
+        compound: ['iron', 'hydrogen', ['oxygen', 2]],
         // YellowLimonite = Limonite;
     },
     graphite: {
         forms: [ore],
         color: [0xa8a89e, 0x172602],
         flags: [NO_SMELTING, FLAMMABLE, DISABLE_DECOMPOSITION],
-        compound: [carbon],
+        compound: ['carbon'],
     },
     bornite: {
         forms: [ore],
         properties: { harvest_level: 1 },
         color: [0xffe05a, 0x442602], texture: rough,
-        compound: [[copper, 5], iron, [sulfur, 4]],
+        compound: [['copper', 5], 'iron', ['sulfur', 4]],
     },
     chalcocite: {
         forms: [ore],
-        color: [0x657882, 0x33302e], texture: emerald,
-        compound: [[copper, 2], sulfur],
+        color: [0x657882, 0x33302e], texture: emerald_texture,
+        compound: [['copper', 2], 'sulfur'],
     },
     bastnasite: {
         forms: [ore],
         properties: { ore_yield: 2 },
         color: [0xcaab60, 0xc8502d], texture: fine,
-        compound: [cerium, carbon, fluorine, [oxygen, 3]],
+        compound: ['cerium', 'carbon', 'fluorine', ['oxygen', 3]],
     },
     pentlandite: {
         forms: [ore],
         color: [0xe3cf13, 0x29315b],
-        compound: [[nickel, 9], [sulfur, 8]],
+        compound: [['nickel', 9], ['sulfur', 8]],
     },
     spodumene: {
         forms: [ore],
         color: [0xffbcbc, 0xc490ff],
-        compound: [lithium, aluminium, [silicon, 2], [oxygen, 6]],
+        compound: ['lithium', 'aluminium', ['silicon', 2], ['oxygen', 6]],
     },
     lepidolite: {
         forms: [ore],
         properties: { ore_yield: 2 },
         color: [0xffdae4, 0x75376f], texture: fine,
-        compound: [potassium, [lithium, 3], [aluminium, 4], [fluorine, 2], [oxygen, 10]],
+        compound: ['potassium', ['lithium', 3], ['aluminium', 4], ['fluorine', 2], ['oxygen', 10]],
     },
     glauconite_sand: {
         forms: [ore],
         properties: { ore_yield: 3 },
-        color: [0x1da351, 0x1a6e8f], texture: sand,
-        compound: [potassium, [magnesium, 2], [aluminium, 2], [silicon, 3], [oxygen, 12], [hydrogen, 2], water],
+        color: [0x1da351, 0x1a6e8f], texture: sand_texture,
+        compound: ['potassium', ['magnesium', 2], ['aluminium', 2], ['silicon', 3], ['oxygen', 12], ['hydrogen', 2], 'water'],
     },
     mica: {
         forms: [ore],
         properties: { ore_yield: 2 },
         color: [0xecfeff, 0xc2a03c], texture: fine,
-        compound: [potassium, [aluminium, 3], [silicon, 3], [fluorine, 2], [oxygen, 10]],
+        compound: ['potassium', ['aluminium', 3], ['silicon', 3], ['fluorine', 2], ['oxygen', 10]],
     },
     barite: {
         forms: [ore],
         color: [0xe8e2d1, 0xf4b74b],
-        compound: [barium, sulfur, [oxygen, 4]],
+        compound: ['barium', 'sulfur', ['oxygen', 4]],
     },
     alunite: {
         forms: [ore],
         properties: { ore_yield: 3 },
         color: [0xfbd677, 0xe11e0a], texture: metallic,
-        compound: [potassium, [aluminium, 2], [silicon, 2], [hydrogen, 6], [oxygen, 14]],
+        compound: ['potassium', ['aluminium', 2], ['silicon', 2], ['hydrogen', 6], ['oxygen', 14]],
     },
     talc: {
         forms: [ore],
         properties: { ore_yield: 2 },
         color: [0xebffe9, 0x6fe19b], texture: fine,
-        compound: [[magnesium, 3], [silicon, 4], [hydrogen, 2], [oxygen, 12]],
+        compound: [['magnesium', 3], ['silicon', 4], ['hydrogen', 2], ['oxygen', 12]],
     },
     soapstone: {
         forms: [ore],
         properties: { harvest_level: 1, ore_yield: 3 },
         color: [0x5a7261, 0x464c4b], texture: rough,
-        compound: [[magnesium, 3], [silicon, 4], [hydrogen, 2], [oxygen, 12]],
+        compound: [['magnesium', 3], ['silicon', 4], ['hydrogen', 2], ['oxygen', 12]],
     },
     kyanite: {
         forms: [ore],
-        color: [0xd5ffff, 0x5a69d6], texture: flint,
-        compound: [[aluminium, 2], silicon, [oxygen, 5]],
+        color: [0xd5ffff, 0x5a69d6], texture: flint_texture,
+        compound: [['aluminium', 2], 'silicon', ['oxygen', 5]],
     },
     pyrochlore: {
         forms: [ore],
         color: [0x5b4838, 0x331400], texture: metallic,
-        compound: [[calcium, 2], [niobium, 2], [oxygen, 6], fluorine],
+        compound: [['calcium', 2], ['niobium', 2], ['oxygen', 6], 'fluorine'],
     },
 }; Object.assign(materials, ores)
 
@@ -1168,34 +1184,34 @@ export const gems = {
         forms: [gem, ore],
         properties: { harvest_level: 1, ore_yield: 3 },
         color: [0xa21717, 0x4b1e0c],
-        compound: [[aluminium, 2], [iron, 3], [silicon, 3], [oxygen, 12]],
+        compound: [['aluminium', 2], ['iron', 3], ['silicon', 3], ['oxygen', 12]],
     },
     andradite: {
         forms: [gem],
         properties: { harvest_level: 1 },
         color: [0xffce26, 0x647d59], texture: ruby_texture,
-        compound: [[calcium, 3], [iron, 2], [silicon, 3], [oxygen, 12]],
+        compound: [['calcium', 3], ['iron', 2], ['silicon', 3], ['oxygen', 12]],
     },
     blue_topaz: {
         forms: [gem, ore],
         properties: { harvest_level: 3, ore_yield: 2 },
         color: [0xdbfeff, 0xa0c4d7], texture: horizontal_gem,
         flags: [EXT_METAL, NO_SMASHING, NO_SMELTING, HIGH_SIFTER_OUTPUT],
-        compound: [[aluminium, 2], silicon, [oxygen, 4], [fluorine, 2]],
+        compound: [['aluminium', 2], 'silicon', ['oxygen', 4], ['fluorine', 2]],
     },
     cinnabar: {
         forms: [gem, ore],
         properties: { harvest_level: 1 },
         color: [0xff335f, 0x3f0110], texture: emerald_texture,
         flags: [CRYSTALLIZABLE, DECOMPOSITION_BY_CENTRIFUGING],
-        compound: [mercury, sulfur],
+        compound: ['mercury', 'sulfur'],
     },
     diamond: {
         forms: [gem, ore],
         properties: { harvest_level: 3 },
         color: [0xC8FFFF], texture: material_textures.diamond,
         flags: [GENERATE_BOLT_SCREW, GENERATE_LENS, GENERATE_GEAR, NO_SMASHING, NO_SMELTING, HIGH_SIFTER_OUTPUT, DISABLE_DECOMPOSITION, EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES, GENERATE_LONG_ROD],
-        compound: [carbon],
+        compound: ['carbon'],
         tool_stats: { speed: 6.0, damage: 7.0, durability: 768, level: 3, attack_speed: 0.1, enchantability: 18 },
     },
     emerald: {
@@ -1203,121 +1219,121 @@ export const gems = {
         properties: { ore_yield: 2 },
         color: [0x17ff6c, 0x003f00], texture: emerald_texture,
         flags: [EXT_METAL, NO_SMASHING, NO_SMELTING, HIGH_SIFTER_OUTPUT, EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES, GENERATE_LENS],
-        compound: [[beryllium, 3], [aluminium, 2], [silicon, 6], [oxygen, 18]],
+        compound: [['beryllium', 3], ['aluminium', 2], ['silicon', 6], ['oxygen', 18]],
     },
     green_sapphire: {
         forms: [gem, ore],
         color: [0x9ae6b0, 0x64C882], texture: horizontal_gem,
         flags: [EXT_METAL, NO_SMASHING, NO_SMELTING, HIGH_SIFTER_OUTPUT],
-        compound: [[aluminium, 2], [oxygen, 3]],
+        compound: [['aluminium', 2], ['oxygen', 3]],
     },
     grossular: {
         forms: [gem, ore],
         properties: { harvest_level: 1, ore_yield: 3 },
         color: [0xffb777, 0x856f48], texture: ruby_texture,
-        compound: [[calcium, 3], [aluminium, 2], [silicon, 3], [oxygen, 12]],
+        compound: [['calcium', 3], ['aluminium', 2], ['silicon', 3], ['oxygen', 12]],
     },
     rutile: {
         forms: [gem],
         color: [0x892506, 0x330101], texture: horizontal_gem,
         flags: [DISABLE_DECOMPOSITION],
-        compound: [titanium, [oxygen, 2]],
+        compound: ['titanium', ['oxygen', 2]],
     },
     lazurite: {
         forms: [gem, ore],
         properties: { harvest_level: 1, ore_yield: 6, byproduct_yield: 4 },
         color: [0x2836f1, 0x183ca3], texture: lapis_texture,
         flags: [GENERATE_PLATE, NO_SMASHING, NO_SMELTING, CRYSTALLIZABLE, GENERATE_ROD, DECOMPOSITION_BY_ELECTROLYZING],
-        compound: [[aluminium, 6], [silicon, 6], [calcium, 8], [sodium, 8]],
+        compound: [['aluminium', 6], ['silicon', 6], ['calcium', 8], ['sodium', 8]],
     },
     pyrope: {
         forms: [gem, ore],
         properties: { ore_yield: 3 },
         color: [0xe81958, 0x811e00], texture: ruby_texture,
-        compound: [[aluminium, 2], [magnesium, 3], [silicon, 3], [oxygen, 12]],
+        compound: [['aluminium', 2], ['magnesium', 3], ['silicon', 3], ['oxygen', 12]],
     },
     ruby: {
         forms: [gem, ore],
         color: [0xd72310, 0x960b6d], texture: ruby_texture,
         flags: [EXT_METAL, NO_SMASHING, NO_SMELTING, HIGH_SIFTER_OUTPUT, GENERATE_LENS],
-        compound: [chromium, [aluminium, 2], [oxygen, 3]],
+        compound: ['chromium', ['aluminium', 2], ['oxygen', 3]],
     },
     salt: {
         forms: [gem, ore],
         properties: { harvest_level: 1, ore_yield: 2 },
         color: [0xFAFAFA], texture: fine,
         flags: [NO_SMASHING],
-        compound: [sodium, chlorine],
+        compound: ['sodium', 'chlorine'],
     },
     rock_salt: {
         forms: [gem, ore],
         properties: { harvest_level: 1, ore_yield: 2 },
         color: [0xffeae1, 0xF0C8C8], texture: fine,
         flags: [NO_SMASHING],
-        compound: [potassium, chlorine],
+        compound: ['potassium', 'chlorine'],
     },
     sapphire: {
         forms: [gem, ore],
         color: [0x3235e3, 0x211455], texture: emerald_texture,
         flags: [EXT_METAL, NO_SMASHING, NO_SMELTING, HIGH_SIFTER_OUTPUT, GENERATE_LENS],
-        compound: [[aluminium, 2], [oxygen, 3]],
+        compound: [['aluminium', 2], ['oxygen', 3]],
     },
     sodalite: {
         forms: [gem, ore],
         properties: { harvest_level: 1, ore_yield: 6, byproduct_yield: 4 },
         color: [0x3d54ff, 0x210d78], texture: lapis_texture,
         flags: [GENERATE_PLATE, GENERATE_ROD, NO_SMASHING, NO_SMELTING, CRYSTALLIZABLE, DECOMPOSITION_BY_ELECTROLYZING],
-        compound: [[aluminium, 3], [silicon, 3], [sodium, 4], chlorine],
+        compound: [['aluminium', 3], ['silicon', 3], ['sodium', 4], 'chlorine'],
     },
     spessartine: {
         forms: [gem, ore],
         properties: { ore_yield: 3 },
         color: [0xffa81e, 0xb33700], texture: ruby_texture,
-        compound: [[aluminium, 2], [manganese, 3], [silicon, 3], [oxygen, 12]],
+        compound: [['aluminium', 2], ['manganese', 3], ['silicon', 3], ['oxygen', 12]],
     },
     topaz: {
         forms: [gem, ore],
         properties: { harvest_level: 3 },
         color: [0xe8d73a, 0xf4680f], texture: horizontal_gem,
         flags: [EXT_METAL, NO_SMASHING, NO_SMELTING, HIGH_SIFTER_OUTPUT],
-        compound: [[aluminium, 2], silicon, [oxygen, 5], fluorine, hydrogen],
+        compound: [['aluminium', 2], 'silicon', ['oxygen', 5], 'fluorine', 'hydrogen'],
     },
     uvarovite: {
         forms: [gem],
         color: [0x2ded4c, 0x00697c], texture: ruby_texture,
-        compound: [[calcium, 3], [chromium, 2], [silicon, 3], [oxygen, 12]],
+        compound: [['calcium', 3], ['chromium', 2], ['silicon', 3], ['oxygen', 12]],
     },
     nether_quartz: {
         forms: [gem, ore],
         properties: { harvest_level: 1, ore_yield: 2 },
         color: [0xf8efe3, 0xe6c1bb], texture: quartz_texture,
         flags: [GENERATE_PLATE, NO_SMELTING, CRYSTALLIZABLE, EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES, DISABLE_DECOMPOSITION],
-        compound: [silicon, [oxygen, 2]],
+        compound: ['silicon', ['oxygen', 2]],
     },
     certus_quartz: {
         forms: [gem, ore],
         properties: { harvest_level: 1, ore_yield: 2 },
         color: [0xc2d6ff, 0x86bacf], texture: certus_texture,
         flags: [GENERATE_PLATE, NO_SMELTING, CRYSTALLIZABLE, DISABLE_DECOMPOSITION],
-        compound: [silicon, [oxygen, 2]],
+        compound: ['silicon', ['oxygen', 2]],
     },
     quartzite: {
         forms: [gem, ore],
         properties: { harvest_level: 1, ore_yield: 2 },
         color: [0xf2f5ed, 0xb8e2b8], texture: quartz_texture,
         flags: [NO_SMELTING, CRYSTALLIZABLE, DISABLE_DECOMPOSITION, GENERATE_PLATE],
-        compound: [silicon, [oxygen, 2]],
+        compound: ['silicon', ['oxygen', 2]],
     },
     realgar: {
         forms: [gem, ore],
         color: [0xff3d33, 0x3f0110], texture: emerald_texture,
         flags: [DECOMPOSITION_BY_CENTRIFUGING],
-        compound: [[arsenic, 4], [sulfur, 4]],
+        compound: [['arsenic', 4], ['sulfur', 4]],
     },
     malachite: {
         forms: [gem, ore],
         color: [0x00f1b0, 0x107a47], texture: lapis_texture,
-        compound: [[copper, 2], carbon, [hydrogen, 2], [oxygen, 5]],
+        compound: [['copper', 2], 'carbon', ['hydrogen', 2], ['oxygen', 5]],
     },
 }; Object.assign(materials, gems)
 
@@ -1332,7 +1348,7 @@ export const alloys = {
         // .armorStats(ArmorProperty.Builder.of(17, new int[] { 3, 7, 6, 2 }).enchantability(8).build())
         rotor_stats: { power: 115, efficiency: 105, damage: 2.5, durability: 192 },
         fluid_pipe: { temperature: 1696, throughput: 20, properties: [true] },
-        compound: [tin, [copper, 3]],
+        compound: ['tin', ['copper', 3]],
     },
     brass: {
         forms: [ingot, liquid],
@@ -1341,14 +1357,14 @@ export const alloys = {
         flags: [EXT2_METAL, MORTAR_GRINDABLE],
         rotor_stats: { power: 130, efficiency: 120, damage: 3.0, durability: 152 },
         item_pipe: { speed: 1, priority: 2048 },
-        compound: [zinc, [copper, 3]],
+        compound: ['zinc', ['copper', 3]],
     },
     battery_alloy: {
         forms: [ingot, liquid],
         properties: { harvest_level: 1, temperature: 660 },
         color: [0xcac0ff, 0x5b0020],
         flags: [EXT_METAL],
-        compound: [[lead, 4], antimony],
+        compound: [['lead', 4], 'antimony'],
     },
     cupronickel: {
         forms: [ingot, liquid],
@@ -1357,7 +1373,7 @@ export const alloys = {
         flags: [EXT_METAL, GENERATE_SPRING, GENERATE_FINE_WIRE],
         item_pipe: { speed: 1, priority: 2048 },
         cable_stats: { voltage: MV, amperage: 1, loss: 1 },
-        compound: [copper, nickel],
+        compound: ['copper', 'nickel'],
     },
     electrum: {
         forms: [ingot, liquid],
@@ -1366,7 +1382,7 @@ export const alloys = {
         flags: [EXT2_METAL, MORTAR_GRINDABLE, GENERATE_FINE_WIRE, GENERATE_RING],
         item_pipe: { speed: 2, priority: 1024 },
         cable_stats: { voltage: HV, amperage: 2, loss: 2 },
-        compound: [silver, gold],
+        compound: ['silver', 'gold'],
     },
     invar: {
         forms: [ingot, liquid],
@@ -1374,9 +1390,9 @@ export const alloys = {
         attributes: [MORTAR_MATERIAL],
         color: [0xe2e8e1, 0x495d57], texture: metallic,
         flags: [EXT2_METAL, MORTAR_GRINDABLE, GENERATE_FRAME, GENERATE_GEAR],
-        tool_stats: { speed: 4.0, damage: 3.0, durability: 384, level: 2, enchantability: 18, enchantments: [[BANE_OF_ARTHROPODS, 3], [BLOCK_EFFICIENCY, 1]] },
+        tool_stats: { speed: 4.0, damage: 3.0, durability: 384, level: 2, enchantability: 18, enchantments: [[bane_of_arthropods, 3], [efficiency, 1]] },
         rotor_stats: { power: 130, efficiency: 115, damage: 3.0, durability: 512 },
-        compound: [[iron, 2], nickel],
+        compound: [['iron', 2], 'nickel'],
     },
     kanthal: {
         forms: [ingot, liquid],
@@ -1384,8 +1400,8 @@ export const alloys = {
         color: [0xC2D2DF, 0x4c4238], texture: metallic,
         flags: [EXT_METAL, GENERATE_SPRING],
         cable_stats: { voltage: HV, amperage: 4, loss: 3 },
-        blasting: { temperature: 1800, voltage: HV, duration: 900, inert_gas: nitrogen },
-        compound: [iron, aluminium, chromium],
+        blasting: { temperature: 1800, voltage: HV, duration: 900, booster_gas: nitrogen_boost },
+        compound: ['iron', 'aluminium', 'chromium'],
     },
     magnalium: {
         forms: [ingot, liquid],
@@ -1394,7 +1410,7 @@ export const alloys = {
         flags: [EXT2_METAL],
         rotor_stats: { power: 100, efficiency: 105, damage: 2.0, durability: 256 },
         item_pipe: { speed: 2, priority: 1024 },
-        compound: [magnesium, [aluminium, 2]],
+        compound: ['magnesium', ['aluminium', 2]],
     },
     nichrome: {
         forms: [ingot, liquid],
@@ -1402,17 +1418,17 @@ export const alloys = {
         color: [0xaf94b2, 0x5b4c6a], texture: metallic,
         flags: [EXT_METAL, GENERATE_SPRING],
         cable_stats: { voltage: EV, amperage: 4, loss: 4 },
-        blasting: { temperature: 2700, voltage: EV, duration: 1300, inert_gas: nitrogen },
+        blasting: { temperature: 2700, voltage: EV, duration: 1300, booster_gas: nitrogen_boost },
         cooling: { voltage: HV },
-        compound: [[nickel, 4], chromium],
+        compound: [['nickel', 4], 'chromium'],
     },
     niobium_nitride: {
         forms: [ingot, fluid],
         color: [0x574457, 0x332e3c], texture: bright,
         flags: [EXT_METAL, GENERATE_FOIL],
         cable_stats: { voltage: LuV, amperage: 1, loss: 1 },
-        blasting: { temperature: 2846, inert_gas: helium },
-        compound: [niobium, nitrogen],
+        blasting: { temperature: 2846, booster_gas: helium_boost },
+        compound: ['niobium', 'nitrogen'],
     },
     niobium_titanium: {
         forms: [ingot, liquid],
@@ -1421,37 +1437,37 @@ export const alloys = {
         flags: [EXT2_METAL, GENERATE_SPRING, GENERATE_SPRING_SMALL, GENERATE_FOIL, GENERATE_FINE_WIRE],
         fluid_pipe: { temperature: 5900, throughput: 175, properties: [true] },
         cable_stats: { voltage: LuV, amperage: 4, loss: 2 },
-        blasting: { temperature: 4500, voltage: HV, duration: 1500, inert_gas: argon },
+        blasting: { temperature: 4500, voltage: HV, duration: 1500, booster_gas: argon_boost },
         cooling: { voltage: HV, duration: 200 },
-        compound: [niobium, titanium],
+        compound: ['niobium', 'titanium'],
     },
     raw_platinum: {
         forms: [dust],
         color: [0xa09a7b, 0x4e4e45], texture: metallic,
         flags: [DISABLE_DECOMPOSITION],
-        compound: [platinum, [chlorine, 2]],
+        compound: ['platinum', ['chlorine', 2]],
     },
     sterling_silver: {
         forms: [ingot, liquid],
         properties: { temperature: 1258 },
         color: [0xfaf4dc, 0x484434], texture: shiny,
         flags: [EXT2_METAL, GENERATE_GEAR],
-        tool_stats: { speed: 3.0, damage: 8.0, durability: 768, level: 2, attack_speed: 0.3, enchantability: 33, enchantments: [[SMITE, 3]] },
+        tool_stats: { speed: 3.0, damage: 8.0, durability: 768, level: 2, attack_speed: 0.3, enchantability: 33, enchantments: [[smite, 3]] },
         rotor_stats: { power: 100, efficiency: 160, damage: 2.0, durability: 196 },
         item_pipe: { speed: 2, priority: 1024 },
-        blasting: { temperature: 1700, voltage: MV, duration: 1000, inert_gas: nitrogen },
-        compound: [copper, [silver, 4]],
+        blasting: { temperature: 1700, voltage: MV, duration: 1000, booster_gas: nitrogen_boost },
+        compound: ['copper', ['silver', 4]],
     },
     rose_gold: {
         forms: [ingot, liquid],
         properties: { temperature: 1341 },
         color: [0xecd5b8, 0xd85f2d], texture: shiny,
         flags: [EXT2_METAL, GENERATE_RING, GENERATE_GEAR],
-        tool_stats: { speed: 12.0, damage: 2.0, durability: 768, level: 2, enchantability: 33, enchantments: [[BLOCK_FORTUNE, 2]] },
+        tool_stats: { speed: 12.0, damage: 2.0, durability: 768, level: 2, enchantability: 33, enchantments: [[fortune, 2]] },
         rotor_stats: { power: 100, efficiency: 170, damage: 2.0, durability: 152 },
         item_pipe: { speed: 2, priority: 1024 },
-        blasting: { temperature: 1600, voltage: MV, duration: 1000, inert_gas: nitrogen },
-        compound: [copper, [gold, 4]],
+        blasting: { temperature: 1600, voltage: MV, duration: 1000, booster_gas: nitrogen_boost },
+        compound: ['copper', ['gold', 4]],
     },
     black_bronze: {
         forms: [ingot, liquid],
@@ -1460,8 +1476,8 @@ export const alloys = {
         flags: [EXT2_METAL, GENERATE_GEAR],
         rotor_stats: { power: 100, efficiency: 155, damage: 2.0, durability: 256 },
         item_pipe: { speed: 2, priority: 1024 },
-        blasting: { temperature: 2000, voltage: MV, duration: 1000, inert_gas: nitrogen },
-        compound: [gold, silver, [copper, 3]],
+        blasting: { temperature: 2000, voltage: MV, duration: 1000, booster_gas: nitrogen_boost },
+        compound: ['gold', 'silver', ['copper', 3]],
     },
     bismuth_bronze: {
         forms: [ingot, liquid],
@@ -1469,8 +1485,8 @@ export const alloys = {
         color: [0xffd26f, 0x895f3d], texture: metallic,
         flags: [EXT2_METAL],
         rotor_stats: { power: 130, efficiency: 120, damage: 3.0, durability: 256 },
-        blasting: { temperature: 1100, voltage: MV, duration: 1000, inert_gas: nitrogen },
-        compound: [bismuth, zinc, [copper, 3]],
+        blasting: { temperature: 1100, voltage: MV, duration: 1000, booster_gas: nitrogen_boost },
+        compound: ['bismuth', 'zinc', ['copper', 3]],
     },
     rtm_alloy: {
         name: 'RTM Alloy',
@@ -1478,18 +1494,18 @@ export const alloys = {
         color: [0x30306B], texture: shiny,
         flags: [GENERATE_SPRING],
         cable_stats: { voltage: EV, amperage: 6, loss: 2 },
-        blasting: { temperature: 3000, voltage: EV, duration: 1400, inert_gas: helium },
+        blasting: { temperature: 3000, voltage: EV, duration: 1400, booster_gas: helium_boost },
         cooling: { voltage: HV, duration: 250 },
-        compound: [[ruthenium, 4], [tungsten, 2], molybdenum],
+        compound: [['ruthenium', 4], ['tungsten', 2], 'molybdenum'],
     },
     ruridit: {
         forms: [ingot, fluid],
         properties: { harvest_level: 3 },
         color: [0x88b5b9, 0x4e885c], texture: bright,
         flags: [GENERATE_FINE_WIRE, GENERATE_GEAR, GENERATE_LONG_ROD, GENERATE_FRAME, GENERATE_BOLT_SCREW],
-        blasting: { temperature: 4500, voltage: EV, duration: 1600, inert_gas: argon },
+        blasting: { temperature: 4500, voltage: EV, duration: 1600, booster_gas: argon_boost },
         cooling: { voltage: HV, duration: 300 },
-        compound: [[ruthenium, 2], iridium],
+        compound: [['ruthenium', 2], 'iridium'],
     },
     osmiridium: {
         forms: [ingot, liquid],
@@ -1498,15 +1514,15 @@ export const alloys = {
         flags: [EXT2_METAL, GENERATE_SMALL_GEAR, GENERATE_RING, GENERATE_ROTOR, GENERATE_ROUND, GENERATE_FINE_WIRE, GENERATE_GEAR],
         rotor_stats: { power: 130, efficiency: 130, damage: 3.0, durability: 3152 },
         item_pipe: { speed: 32, priority: 64 },
-        blasting: { temperature: 4500, voltage: LuV, duration: 900, inert_gas: argon },
+        blasting: { temperature: 4500, voltage: LuV, duration: 900, booster_gas: argon_boost },
         cooling: { voltage: EV, duration: 200 },
-        compound: [[iridium, 3], osmium],
+        compound: [['iridium', 3], 'osmium'],
     },
     soldering_alloy: {
         forms: [ingot, liquid],
         properties: { harvest_level: 1, temperature: 544 },
         color: [0x8c8ca7, 0x8675a7],
-        compound: [[tin, 6], [lead, 3], antimony],
+        compound: [['tin', 6], ['lead', 3], 'antimony'],
     },
     stainless_steel: {
         forms: [ingot, liquid],
@@ -1516,8 +1532,8 @@ export const alloys = {
         tool_stats: { speed: 7.0, damage: 5.0, durability: 1024, level: 3, enchantability: 14 },
         rotor_stats: { power: 160, efficiency: 115, damage: 4.0, durability: 480 },
         fluid_pipe: { temperature: 2428, throughput: 75, properties: [true, true, true, false] },
-        blasting: { temperature: 1700, voltage: HV, duration: 1100, inert_gas: nitrogen },
-        compound: [[iron, 6], chromium, manganese, nickel],
+        blasting: { temperature: 1700, voltage: HV, duration: 1100, booster_gas: nitrogen_boost },
+        compound: [['iron', 6], 'chromium', 'manganese', 'nickel'],
     },
     tin_alloy: {
         forms: [ingot, liquid],
@@ -1525,7 +1541,7 @@ export const alloys = {
         color: [0xC8C8C8, 0x8b8b8b], texture: metallic,
         flags: [EXT2_METAL],
         fluid_pipe: { temperature: 1572, throughput: 20, properties: [true] },
-        compound: [tin, iron],
+        compound: ['tin', 'iron'],
     },
     ultimet: {
         forms: [ingot, liquid],
@@ -1535,8 +1551,8 @@ export const alloys = {
         tool_stats: { speed: 10.0, damage: 7.0, durability: 2048, level: 4, attack_speed: 0.1, enchantability: 21 },
         rotor_stats: { power: 160, efficiency: 130, damage: 4.0, durability: 2048 },
         item_pipe: { speed: 16, priority: 128 },
-        blasting: { temperature: 2700, voltage: HV, duration: 1300, inert_gas: helium },
-        compound: [[cobalt, 5], [chromium, 2], nickel, molybdenum],
+        blasting: { temperature: 2700, voltage: HV, duration: 1300, booster_gas: helium_boost },
+        compound: [['cobalt', 5], ['chromium', 2], 'nickel', 'molybdenum'],
     },
     yttrium_barium_cuprate: {
         forms: [ingot, liquid],
@@ -1544,31 +1560,31 @@ export const alloys = {
         color: [0x796d72, 0x260a3a], texture: metallic,
         flags: [EXT_METAL, GENERATE_FINE_WIRE, GENERATE_SPRING, GENERATE_SPRING_SMALL, GENERATE_FOIL, GENERATE_BOLT_SCREW],
         cable_stats: { voltage: UV, amperage: 4, loss: 4 },
-        blasting: { temperature: 4500, voltage: IV, duration: 1000, inert_gas: argon },
+        blasting: { temperature: 4500, voltage: IV, duration: 1000, booster_gas: argon_boost },
         cooling: { voltage: EV, duration: 150 },
-        compound: [elements.yttrium, [barium, 2], [copper, 3], [oxygen, 7]],
+        compound: ['yttrium', ['barium', 2], ['copper', 3], ['oxygen', 7]],
     },
     gallium_arsenide: {
         forms: [ingot, liquid],
         properties: { harvest_level: 1, temperature: 1511 },
         color: [0x938fff, 0x8c548c],
         flags: [STD_METAL, DECOMPOSITION_BY_CENTRIFUGING],
-        blasting: { temperature: 1200, voltage: MV, duration: 1200, inert_gas: nitrogen },
-        compound: [arsenic, elements.gallium],
+        blasting: { temperature: 1200, voltage: MV, duration: 1200, booster_gas: nitrogen_boost },
+        compound: ['arsenic', 'gallium'],
     },
     indium_gallium_phosphide: {
         forms: [ingot, liquid],
         properties: { harvest_level: 1, temperature: 350 },
         color: [0xa77bd7, 0x4e546b],
         flags: [STD_METAL, DECOMPOSITION_BY_CENTRIFUGING],
-        compound: [elements.indium, elements.gallium, phosphorus],
+        compound: ['indium', 'gallium', 'phosphorus'],
     },
     nickel_zinc_ferrite: {
         forms: [ingot, liquid],
         properties: { harvest_level: 0, temperature: 1410 },
         color: [0x3f2821, 0x2c2725],
         flags: [GENERATE_RING],
-        compound: [nickel, zinc, [iron, 4], [oxygen, 8]],
+        compound: ['nickel', 'zinc', ['iron', 4], ['oxygen', 8]],
     },
     manganese_phosphide: {
         forms: [ingot, liquid],
@@ -1577,8 +1593,8 @@ export const alloys = {
         color: [0xE1B454, 0x223033], texture: metallic,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
         cable_stats: { voltage: LV, amperage: 2, loss: 0 },
-        blasting: { temperature: 1200, inert_gas: nitrogen },
-        compound: [manganese, phosphorus],
+        blasting: { temperature: 1200, booster_gas: nitrogen_boost },
+        compound: ['manganese', 'phosphorus'],
     },
     magnesium_diboride: {
         forms: [ingot, liquid],
@@ -1587,9 +1603,9 @@ export const alloys = {
         color: [0x603c1a, 0x423e39], texture: metallic,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
         cable_stats: { voltage: MV, amperage: 4, loss: 0 },
-        blasting: { temperature: 2500, voltage: HV, duration: 1000, inert_gas: nitrogen },
+        blasting: { temperature: 2500, voltage: HV, duration: 1000, booster_gas: nitrogen_boost },
         cooling: { voltage: MV, duration: 200 },
-        compound: [magnesium, [elements.boron, 2]],
+        compound: ['magnesium', ['boron', 2]],
     },
     mercury_barium_calcium_cuprate: {
         forms: [ingot, liquid],
@@ -1598,9 +1614,9 @@ export const alloys = {
         color: [0x928547, 0x3f2e2e], texture: shiny,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
         cable_stats: { voltage: HV, amperage: 4, loss: 0 },
-        blasting: { temperature: 3300, voltage: HV, duration: 1500, inert_gas: nitrogen },
+        blasting: { temperature: 3300, voltage: HV, duration: 1500, booster_gas: nitrogen_boost },
         cooling: { voltage: HV },
-        compound: [mercury, [barium, 2], [calcium, 2], [copper, 3], [oxygen, 8]],
+        compound: ['mercury', ['barium', 2], ['calcium', 2], ['copper', 3], ['oxygen', 8]],
     },
     uranium_triplatinum: {
         forms: [ingot, liquid],
@@ -1609,10 +1625,10 @@ export const alloys = {
         color: [0x457045, 0x66ff00], texture: radioactive,
         flags: [DECOMPOSITION_BY_CENTRIFUGING],
         cable_stats: { voltage: EV, amperage: 6, loss: 0 },
-        blasting: { temperature: 4400, voltage: EV, duration: 1000, inert_gas: helium },
+        blasting: { temperature: 4400, voltage: EV, duration: 1000, booster_gas: helium_boost },
         cooling: { voltage: EV, duration: 200 },
         formula: 'UPt3',
-        compound: [elements.uranium, [platinum, 3]],
+        compound: ['uranium', ['platinum', 3]],
     },
     samarium_iron_arsenic_oxide: {
         forms: [ingot, liquid],
@@ -1621,9 +1637,9 @@ export const alloys = {
         color: [0x850e85, 0x332f33], texture: shiny,
         flags: [DECOMPOSITION_BY_CENTRIFUGING],
         cable_stats: { voltage: IV, amperage: 6, loss: 0 },
-        blasting: { temperature: 5200, voltage: EV, duration: 1500, inert_gas: helium },
+        blasting: { temperature: 5200, voltage: EV, duration: 1500, booster_gas: helium_boost },
         cooling: { voltage: IV, duration: 200 },
-        compound: [elements.samarium, iron, arsenic, oxygen],
+        compound: ['samarium', 'iron', 'arsenic', 'oxygen'],
     },
     indium_tin_barium_titanium_cuprate: {
         forms: [ingot, liquid],
@@ -1632,9 +1648,9 @@ export const alloys = {
         color: [0x686760, 0x673300], texture: metallic,
         flags: [DECOMPOSITION_BY_ELECTROLYZING, GENERATE_FINE_WIRE],
         cable_stats: { voltage: LuV, amperage: 8, loss: 0 },
-        blasting: { temperature: 6000, voltage: IV, duration: 1000, inert_gas: argon },
+        blasting: { temperature: 6000, voltage: IV, duration: 1000, booster_gas: argon_boost },
         cooling: { voltage: LuV },
-        compound: [[elements.indium, 4], [tin, 2], [barium, 2], titanium, [copper, 7], [oxygen, 14]],
+        compound: [['indium', 4], ['tin', 2], ['barium', 2], 'titanium', ['copper', 7], ['oxygen', 14]],
     },
     uranium_rhodium_dinaquadide: {
         forms: [ingot, liquid],
@@ -1643,10 +1659,10 @@ export const alloys = {
         color: [0x232020, 0xff009c], texture: radioactive,
         flags: [DECOMPOSITION_BY_CENTRIFUGING, GENERATE_FINE_WIRE],
         cable_stats: { voltage: ZPM, amperage: 8, loss: 0 },
-        blasting: { temperature: 9000, voltage: IV, duration: 1500, inert_gas: argon },
+        blasting: { temperature: 9000, voltage: IV, duration: 1500, booster_gas: argon_boost },
         cooling: { voltage: ZPM, duration: 200 },
         formula: 'URhNq2',
-        compound: [elements.uranium238, rhodium, [elements.naquadah, 2]],
+        compound: ['uranium238', 'rhodium', ['naquadah', 2]],
     },
     enriched_naquadah_trinium_europium_duranide: {
         forms: [ingot, liquid],
@@ -1655,9 +1671,9 @@ export const alloys = {
         color: [0xc6b083, 0x45063d], texture: metallic,
         flags: [DECOMPOSITION_BY_CENTRIFUGING, GENERATE_FINE_WIRE],
         cable_stats: { voltage: UV, amperage: 16, loss: 0 },
-        blasting: { temperature: 9900, voltage: LuV, duration: 1200, inert_gas: argon },
+        blasting: { temperature: 9900, voltage: LuV, duration: 1200, booster_gas: argon_boost },
         cooling: { voltage: UV, duration: 200 },
-        compound: [[elements.enriched_naquadah, 4], [elements.trinium, 3], [elements.europium, 2], elements.duranium],
+        compound: [['enriched_naquadah', 4], ['trinium', 3], ['europium', 2], 'duranium'],
     },
     ruthenium_trinium_americium_neutronate: {
         forms: [ingot, liquid],
@@ -1666,9 +1682,9 @@ export const alloys = {
         color: [0x897b76, 0x00c0ff], texture: radioactive,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
         cable_stats: { voltage: UHV, amperage: 24, loss: 0 },
-        blasting: { temperature: 10800, voltage: ZPM, duration: 1000, inert_gas: neon },
+        blasting: { temperature: 10800, voltage: ZPM, duration: 1000, booster_gas: neon_boost },
         cooling: { voltage: UHV, duration: 200 },
-        compound: [ruthenium, [elements.trinium, 2], elements.americium, [elements.neutronium, 2], [oxygen, 8]],
+        compound: ['ruthenium', ['trinium', 2], 'americium', ['neutronium', 2], ['oxygen', 8]],
     },
 }; Object.assign(materials, alloys)
 
@@ -1680,3 +1696,7 @@ export const intermediaries = {
     // Platline
     // Other
 }; Object.assign(materials, intermediaries)
+
+// Provide the material name inside the material object
+export const material_name = Symbol('name')
+Object.entries(materials).forEach(([name, material]) => material[material_name] = name)

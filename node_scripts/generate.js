@@ -1,6 +1,7 @@
 import fs from "node:fs"; import node_path from "node:path"
 import { texture_mappings, mod_assets, textures_path, flipbooks } from "./local_settings.js"
 import { format_json } from "./utilities.js"
+import materials, { material_name } from '../source/materials.js'
 
 function make_textures() {
     // Generate the texture files
@@ -103,9 +104,10 @@ switch (process.argv[2]) {
     
     default: console.error(`Unexpected argument: ${process.argv[2]}`)
 }
-
 // For printing to the terminal
 function debug() {
+    Object.values(materials).forEach(material => console.log(material[material_name]))
+    // Validate all the materials
     // // Print the texture mappings for voltage casing
     // const meta_data = []
     // const tiers = `${mod_assets}/${textures_path}/block/casings/voltage`

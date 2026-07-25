@@ -24,16 +24,6 @@ const output = '../output'
 if (fs.existsSync(output)) fs.rmSync(output, {recursive: true})
 fs.mkdirSync(output, {}, () => {})
 
-// Command Table
-const subcommands = new Map([
-    [undefined, build],
-    ['run', deploy],
-    ['remove', remove],
-    ['delete', remove],
-    ['release', release],
-])
-
-
 // For building en_US.json
 const translation_keys = []
 
@@ -165,6 +155,13 @@ function make_block(id, block) {
 }
 
 // Run the command
-const subcommand = subcommands.get(process.argv[2])
+const subcommand = new Map([
+    [undefined, build],
+    ['run', deploy],
+    ['remove', remove],
+    ['delete', remove],
+    ['release', release],
+]).get(process.argv[2])
+
 if (typeof subcommand == 'function') subcommand()
 else console.error(`Unexpected argument: ${process.argv[2]}`)
