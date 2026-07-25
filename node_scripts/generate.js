@@ -1,7 +1,7 @@
 import fs from "node:fs"; import node_path from "node:path"
 import { texture_mappings, mod_assets, textures_path, flipbooks } from "./local_settings.js"
 import { format_json } from "./utilities.js"
-import materials, { material_name } from '../source/materials.js'
+import materials from '../source/materials.js'
 
 function make_textures() {
     // Generate the texture files
@@ -106,8 +106,31 @@ switch (process.argv[2]) {
 }
 // For printing to the terminal
 function debug() {
-    Object.values(materials).forEach(material => console.log(material[material_name]))
-    // Validate all the materials
+    const used_values = new Map
+    for (const material of Object.values(materials)) {
+        Object.keys(material).forEach(field => {
+            const values = used_values.get(field) ?? new Set
+            if (!used_values.has(field)) used_values.set(field, values)
+            const value = material[field]
+            if (typeof value == 'string') values.add(value)
+            else if (Array.isArray(value)) value.forEach(item => values.add(item))
+            else if (value && typeof value == 'object') Object.keys(value).forEach(item => values.add(item))
+        })
+    }
+    used_values.delete('name')
+    used_values.delete('formula')
+    used_values.delete('texture')
+    used_values.delete('element')
+    used_values.delete('rotor_stats')
+    used_values.delete('cable_stats')
+    used_values.delete('item_pipe')
+    used_values.delete('fluid_pipe')
+    used_values.delete('blasting')
+    used_values.delete('color')
+    console.log(used_values)
+
+
+
     // // Print the texture mappings for voltage casing
     // const meta_data = []
     // const tiers = `${mod_assets}/${textures_path}/block/casings/voltage`

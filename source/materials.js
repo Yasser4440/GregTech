@@ -1,4 +1,5 @@
-import { booster_gases, enchantments, material_forms, material_shapes, material_textures, voltage_tiers,  } from "./data.js"
+import { booster_gases, enchantments, fluid_pipe_properties, material_forms, material_shapes, material_textures, voltage_tiers,  } from "./data.js"
+import { freeze, validate_materials as validate } from "./validators.js"
 
 
 const {ULV, LV, MV, HV, EV, IV, LuV, ZPM, UV, UHV, UEV, UIV, UXV, OpV, MAX} = voltage_tiers
@@ -14,15 +15,23 @@ const {
 } = material_textures
 
 
-// Material Forms:
 const { dust, ore, gem, ingot, fluid, liquid, gas, plasma } = material_forms
+
+const { gas_proof, acid_proof, cryogenic_proof, plasma_proof } = fluid_pipe_properties
+
+const { bane_of_arthropods, smite, efficiency, fortune } = enchantments
+
+// Blast Furnace Booster Gases:
+const nitrogen_boost = booster_gases.nitrogen.gas
+const helium_boost = booster_gases.helium.gas
+const argon_boost = booster_gases.argon.gas
+const neon_boost = booster_gases.neon.gas
+const krypton_boost = booster_gases.krypton.gas
 
 // Material Attributes:
 const acidic = 'acidic', emissive_ore = 'emissive_ore'
 const CUSTOM_STILL_TEXTURE = 'CUSTOM_STILL_TEXTURE', MORTAR_MATERIAL = 'MORTAR_MATERIAL', NO_FLUID_COLOR = 'NO_FLUID_COLOR'
 const HAZARD_NOT_APPLIED_TO_DERIVATIVES = 'HAZARD_NOT_APPLIED_TO_DERIVATIVES', SUPERCONDUCTOR = 'SUPERCONDUCTOR'
-
-const { bane_of_arthropods, smite, efficiency, fortune } = enchantments
 
 
 // Material Flags:
@@ -50,17 +59,6 @@ const ARSENICOSIS = 'ARSENICOSIS', POISON = 'POISON', CARCINOGEN = 'CARCINOGEN',
 
 // Tool Properties
 const unbreakable = 'unbreakable', magnetic_tool = 'magnetic'
-
-// Fluid Pipe Properties:
-const gas_proof = 'gas_proof', acid_proof = 'acid_proof'
-const cryogenic_proof = 'cryogenic_proof', plasma_proof = 'plasma_proof'
-
-// Blast Furnace Booster Gases:
-const nitrogen_boost = booster_gases.nitrogen.gas
-const helium_boost = booster_gases.helium.gas
-const argon_boost = booster_gases.argon.gas
-const neon_boost = booster_gases.neon.gas
-const krypton_boost = booster_gases.krypton.gas
 
 // Localization Keys
 const FLUID_GENERIC = 'FLUID_GENERIC', LIQUID_GENERIC = 'LIQUID_GENERIC'
@@ -513,7 +511,7 @@ export const elements = {
         element: {symbol: 'Tb', p: 65, n: 93},
     },
     dysprosium: {
-        color: [0x6a664b, 0x423307], textures: metallic,
+        color: [0x6a664b, 0x423307], texture: metallic,
         element: {symbol: 'Dy', p: 66, n: 96},
     },
     holmium: {
@@ -594,7 +592,7 @@ export const elements = {
         color: [0xfff4ba, 0x8d8d71], texture: shiny,
         flags: [EXT2_METAL, GENERATE_FOIL, GENERATE_FINE_WIRE, GENERATE_RING, GENERATE_SPRING_SMALL, GENERATE_SPRING],
         cable_stats: { voltage: IV, amperage: 2, loss: 1 },
-        itemPipeProperties: { speed: 4, priority: 512 },
+        item_pipe: { speed: 4, priority: 512 },
         element: {symbol: 'Pt', p: 78, n: 117},
     },
     gold: {
@@ -748,7 +746,7 @@ export const elements = {
         element: {symbol: 'No', p: 102, n: 157},
     },
     lawrencium: {
-        color: [0x5D7575], texture: radioactive,
+        color: 0x5D7575, texture: radioactive,
         element: {symbol: 'Lr', p: 103, n: 159},
     },
     rutherfordium: {
@@ -847,8 +845,8 @@ export const elements = {
     naquadah: {
         forms: [ingot, liquid, ore],
         properties: { harvest_level: 4 },
-        attributes: [CUSTOM_STILL_TEXTURE],
-        color: [0x323232, false, 0x1e251b], texture: metallic,
+        attributes: [CUSTOM_STILL_TEXTURE, NO_FLUID_COLOR],
+        color: [0x323232, 0x1e251b], texture: metallic,
         flags: [EXT_METAL, GENERATE_FOIL, GENERATE_SPRING, GENERATE_FINE_WIRE, GENERATE_BOLT_SCREW],
         rotor_stats: { power: 160, efficiency: 105, damage: 4, durability: 1280 },
         cable_stats: { voltage: ZPM, amperage: 2, loss: 2 },
@@ -870,8 +868,8 @@ export const elements = {
     naquadria: {
         forms: [ingot, liquid],
         properties: { harvest_level: 3 },
-        attributes: [CUSTOM_STILL_TEXTURE],
-        color: [0x1E1E1E, false, 0x59b3ff], texture: radioactive,
+        attributes: [CUSTOM_STILL_TEXTURE, NO_FLUID_COLOR],
+        color: [0x1E1E1E, 0x59b3ff], texture: radioactive,
         flags: [EXT_METAL, GENERATE_FOIL, GENERATE_GEAR, GENERATE_FINE_WIRE, GENERATE_BOLT_SCREW],
         blasting: { temperature: 9000, voltage: ZPM, duration: 1200, booster_gas: argon_boost },
         cooling: { voltage: LuV, duration: 200 },
@@ -1209,7 +1207,7 @@ export const gems = {
     diamond: {
         forms: [gem, ore],
         properties: { harvest_level: 3 },
-        color: [0xC8FFFF], texture: material_textures.diamond,
+        color: 0xC8FFFF, texture: material_textures.diamond,
         flags: [GENERATE_BOLT_SCREW, GENERATE_LENS, GENERATE_GEAR, NO_SMASHING, NO_SMELTING, HIGH_SIFTER_OUTPUT, DISABLE_DECOMPOSITION, EXCLUDE_BLOCK_CRAFTING_BY_HAND_RECIPES, GENERATE_LONG_ROD],
         compound: ['carbon'],
         tool_stats: { speed: 6.0, damage: 7.0, durability: 768, level: 3, attack_speed: 0.1, enchantability: 18 },
@@ -1261,7 +1259,7 @@ export const gems = {
     salt: {
         forms: [gem, ore],
         properties: { harvest_level: 1, ore_yield: 2 },
-        color: [0xFAFAFA], texture: fine,
+        color: 0xFAFAFA, texture: fine,
         flags: [NO_SMASHING],
         compound: ['sodium', 'chlorine'],
     },
@@ -1347,7 +1345,7 @@ export const alloys = {
         tool_stats: { speed: 3.0, damage: 2.0, durability: 192, level: 2, enchantability: 18 },
         // .armorStats(ArmorProperty.Builder.of(17, new int[] { 3, 7, 6, 2 }).enchantability(8).build())
         rotor_stats: { power: 115, efficiency: 105, damage: 2.5, durability: 192 },
-        fluid_pipe: { temperature: 1696, throughput: 20, properties: [true] },
+        fluid_pipe: { temperature: 1696, throughput: 20, properties: [gas_proof] },
         compound: ['tin', ['copper', 3]],
     },
     brass: {
@@ -1435,7 +1433,7 @@ export const alloys = {
         properties: { temperature: 2345 },
         color: [0xd2d9f9, 0x262528], texture: metallic,
         flags: [EXT2_METAL, GENERATE_SPRING, GENERATE_SPRING_SMALL, GENERATE_FOIL, GENERATE_FINE_WIRE],
-        fluid_pipe: { temperature: 5900, throughput: 175, properties: [true] },
+        fluid_pipe: { temperature: 5900, throughput: 175, properties: [gas_proof] },
         cable_stats: { voltage: LuV, amperage: 4, loss: 2 },
         blasting: { temperature: 4500, voltage: HV, duration: 1500, booster_gas: argon_boost },
         cooling: { voltage: HV, duration: 200 },
@@ -1491,7 +1489,7 @@ export const alloys = {
     rtm_alloy: {
         name: 'RTM Alloy',
         forms: [ingot, fluid],
-        color: [0x30306B], texture: shiny,
+        color: 0x30306B, texture: shiny,
         flags: [GENERATE_SPRING],
         cable_stats: { voltage: EV, amperage: 6, loss: 2 },
         blasting: { temperature: 3000, voltage: EV, duration: 1400, booster_gas: helium_boost },
@@ -1531,7 +1529,7 @@ export const alloys = {
         flags: [EXT2_METAL, GENERATE_ROTOR, GENERATE_SMALL_GEAR, GENERATE_FRAME, GENERATE_LONG_ROD, GENERATE_FOIL, GENERATE_GEAR],
         tool_stats: { speed: 7.0, damage: 5.0, durability: 1024, level: 3, enchantability: 14 },
         rotor_stats: { power: 160, efficiency: 115, damage: 4.0, durability: 480 },
-        fluid_pipe: { temperature: 2428, throughput: 75, properties: [true, true, true, false] },
+        fluid_pipe: { temperature: 2428, throughput: 75, properties: [gas_proof, acid_proof, cryogenic_proof] },
         blasting: { temperature: 1700, voltage: HV, duration: 1100, booster_gas: nitrogen_boost },
         compound: [['iron', 6], 'chromium', 'manganese', 'nickel'],
     },
@@ -1540,7 +1538,7 @@ export const alloys = {
         properties: { temperature: 1258 },
         color: [0xC8C8C8, 0x8b8b8b], texture: metallic,
         flags: [EXT2_METAL],
-        fluid_pipe: { temperature: 1572, throughput: 20, properties: [true] },
+        fluid_pipe: { temperature: 1572, throughput: 20, properties: [gas_proof] },
         compound: ['tin', 'iron'],
     },
     ultimet: {
@@ -1588,43 +1586,43 @@ export const alloys = {
     },
     manganese_phosphide: {
         forms: [ingot, liquid],
-        properties: { temperature: 1368, critical_temperature: 78 },
+        properties: { temperature: 1368 },
         attributes: [SUPERCONDUCTOR],
         color: [0xE1B454, 0x223033], texture: metallic,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
-        cable_stats: { voltage: LV, amperage: 2, loss: 0 },
+        cable_stats: { voltage: LV, amperage: 2, critical_temperature: 78 },
         blasting: { temperature: 1200, booster_gas: nitrogen_boost },
         compound: ['manganese', 'phosphorus'],
     },
     magnesium_diboride: {
         forms: [ingot, liquid],
-        properties: { temperature: 1103, critical_temperature: 78 },
+        properties: { temperature: 1103 },
         attributes: [SUPERCONDUCTOR],
         color: [0x603c1a, 0x423e39], texture: metallic,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
-        cable_stats: { voltage: MV, amperage: 4, loss: 0 },
+        cable_stats: { voltage: MV, amperage: 4, critical_temperature: 78 },
         blasting: { temperature: 2500, voltage: HV, duration: 1000, booster_gas: nitrogen_boost },
         cooling: { voltage: MV, duration: 200 },
         compound: ['magnesium', ['boron', 2]],
     },
     mercury_barium_calcium_cuprate: {
         forms: [ingot, liquid],
-        properties: { temperature: 1075, critical_temperature: 78 },
+        properties: { temperature: 1075 },
         attributes: [SUPERCONDUCTOR],
         color: [0x928547, 0x3f2e2e], texture: shiny,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
-        cable_stats: { voltage: HV, amperage: 4, loss: 0 },
+        cable_stats: { voltage: HV, amperage: 4, critical_temperature: 78 },
         blasting: { temperature: 3300, voltage: HV, duration: 1500, booster_gas: nitrogen_boost },
         cooling: { voltage: HV },
         compound: ['mercury', ['barium', 2], ['calcium', 2], ['copper', 3], ['oxygen', 8]],
     },
     uranium_triplatinum: {
         forms: [ingot, liquid],
-        properties: { temperature: 1882, critical_temperature: 30 },
+        properties: { temperature: 1882 },
         attributes: [SUPERCONDUCTOR],
         color: [0x457045, 0x66ff00], texture: radioactive,
         flags: [DECOMPOSITION_BY_CENTRIFUGING],
-        cable_stats: { voltage: EV, amperage: 6, loss: 0 },
+        cable_stats: { voltage: EV, amperage: 6, critical_temperature: 30 },
         blasting: { temperature: 4400, voltage: EV, duration: 1000, booster_gas: helium_boost },
         cooling: { voltage: EV, duration: 200 },
         formula: 'UPt3',
@@ -1632,33 +1630,33 @@ export const alloys = {
     },
     samarium_iron_arsenic_oxide: {
         forms: [ingot, liquid],
-        properties: { temperature: 1347, critical_temperature: 30 },
+        properties: { temperature: 1347 },
         attributes: [SUPERCONDUCTOR],
         color: [0x850e85, 0x332f33], texture: shiny,
         flags: [DECOMPOSITION_BY_CENTRIFUGING],
-        cable_stats: { voltage: IV, amperage: 6, loss: 0 },
+        cable_stats: { voltage: IV, amperage: 6, critical_temperature: 30 },
         blasting: { temperature: 5200, voltage: EV, duration: 1500, booster_gas: helium_boost },
         cooling: { voltage: IV, duration: 200 },
         compound: ['samarium', 'iron', 'arsenic', 'oxygen'],
     },
     indium_tin_barium_titanium_cuprate: {
         forms: [ingot, liquid],
-        properties: { temperature: 1012, critical_temperature: 5 },
+        properties: { temperature: 1012 },
         attributes: [SUPERCONDUCTOR],
         color: [0x686760, 0x673300], texture: metallic,
         flags: [DECOMPOSITION_BY_ELECTROLYZING, GENERATE_FINE_WIRE],
-        cable_stats: { voltage: LuV, amperage: 8, loss: 0 },
+        cable_stats: { voltage: LuV, amperage: 8, critical_temperature: 5 },
         blasting: { temperature: 6000, voltage: IV, duration: 1000, booster_gas: argon_boost },
         cooling: { voltage: LuV },
         compound: [['indium', 4], ['tin', 2], ['barium', 2], 'titanium', ['copper', 7], ['oxygen', 14]],
     },
     uranium_rhodium_dinaquadide: {
         forms: [ingot, liquid],
-        properties: { temperature: 3410, critical_temperature: 5 },
+        properties: { temperature: 3410 },
         attributes: [SUPERCONDUCTOR],
         color: [0x232020, 0xff009c], texture: radioactive,
         flags: [DECOMPOSITION_BY_CENTRIFUGING, GENERATE_FINE_WIRE],
-        cable_stats: { voltage: ZPM, amperage: 8, loss: 0 },
+        cable_stats: { voltage: ZPM, amperage: 8, loss: 0, critical_temperature: 5 },
         blasting: { temperature: 9000, voltage: IV, duration: 1500, booster_gas: argon_boost },
         cooling: { voltage: ZPM, duration: 200 },
         formula: 'URhNq2',
@@ -1666,22 +1664,22 @@ export const alloys = {
     },
     enriched_naquadah_trinium_europium_duranide: {
         forms: [ingot, liquid],
-        properties: { temperature: 5930, critical_temperature: 3 },
+        properties: { temperature: 5930 },
         attributes: [SUPERCONDUCTOR],
         color: [0xc6b083, 0x45063d], texture: metallic,
         flags: [DECOMPOSITION_BY_CENTRIFUGING, GENERATE_FINE_WIRE],
-        cable_stats: { voltage: UV, amperage: 16, loss: 0 },
+        cable_stats: { voltage: UV, amperage: 16, loss: 0, critical_temperature: 3 },
         blasting: { temperature: 9900, voltage: LuV, duration: 1200, booster_gas: argon_boost },
         cooling: { voltage: UV, duration: 200 },
         compound: [['enriched_naquadah', 4], ['trinium', 3], ['europium', 2], 'duranium'],
     },
     ruthenium_trinium_americium_neutronate: {
         forms: [ingot, liquid],
-        properties: { temperature: 23691, critical_temperature: 3 },
+        properties: { temperature: 23691 },
         attributes: [SUPERCONDUCTOR],
         color: [0x897b76, 0x00c0ff], texture: radioactive,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
-        cable_stats: { voltage: UHV, amperage: 24, loss: 0 },
+        cable_stats: { voltage: UHV, amperage: 24, loss: 0, critical_temperature: 3 },
         blasting: { temperature: 10800, voltage: ZPM, duration: 1000, booster_gas: neon_boost },
         cooling: { voltage: UHV, duration: 200 },
         compound: ['ruthenium', ['trinium', 2], 'americium', ['neutronium', 2], ['oxygen', 8]],
@@ -1700,3 +1698,8 @@ export const intermediaries = {
 // Provide the material name inside the material object
 export const material_name = Symbol('name')
 Object.entries(materials).forEach(([name, material]) => material[material_name] = name)
+
+// Validate, Set defaults, and Freeze the materials
+validate(materials)
+// set_defaults(materials)
+freeze(materials)

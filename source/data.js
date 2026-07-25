@@ -1,8 +1,9 @@
+
 export const voltage_tiers = {
     ULV: 'ULV', LV: 'LV', MV: 'MV', HV: 'HV', EV: 'EV', IV: 'IV',
     LuV: 'LuV', ZPM: 'ZPM', UV: 'UV', UHV: 'UHV', UEV: 'UEV', UIV: 'UIV',
     UXV: 'UXV', OpV: 'OpV', MAX: 'MAX',
-}
+}; export const voltage_tiers_array = Object.values(voltage_tiers)
 
 export const material_textures = {
     dull: 'dull', metallic: 'metallic', shiny: 'shiny', bright: 'bright', fine: 'fine', rough: 'rough',
@@ -10,7 +11,14 @@ export const material_textures = {
     glass: 'glass', nether_star: 'nether_star', sand: 'sand', wood: 'wood',
     lignite: 'lignite', quartz: 'quartz', certus: 'certus', lapis: 'lapis', flint: 'flint',
     magnetic: 'magnetic', radioactive: 'radioactive'
-}
+}; export const material_textures_array = Object.values(material_textures)
+
+export const fluid_pipe_properties = {
+    gas_proof: 'gas_proof',
+    acid_proof: 'acid_proof',
+    cryogenic_proof: 'cryogenic_proof',
+    plasma_proof: 'plasma_proof',
+}; export const fluid_pipe_properties_array = Object.values(fluid_pipe_properties)
 
 export const booster_gases = {
     nitrogen: { gas: 'nitrogen', amount: 1000 },
@@ -18,7 +26,7 @@ export const booster_gases = {
     argon: { gas: 'argon', amount: 50 },
     neon: { gas: 'neon', amount: 25 },
     krypton: { gas: 'krypton', amount: 10 },
-}
+}; export const booster_gases_array = Object.values(booster_gases).map(gas => gas.gas)
 
 export const material_shapes = {
     // Dusts
@@ -64,12 +72,12 @@ export const material_shapes = {
     screwdriver_tool_head: 'screwdriver_tool_head',
     wirecutter_tool_head: 'wirecutter_tool_head',
     wrench_tool_head: 'wrench_tool_head',
-}
+}; export const material_shapes_array = Object.values(material_shapes)
 
 export const material_forms = {
     dust: 'dust', ore: 'ore', gem: 'gem', ingot: 'ingot',
     fluid: 'fluid', liquid: 'liquid', gas: 'gas', plasma: 'plasma',
-}
+}; export const material_forms_array = Object.values(material_forms)
 
 export const recipe_types = {
     chemical_reactor: 'chemical_reactor',
@@ -78,11 +86,11 @@ export const recipe_types = {
     electrolyzer: 'electrolyzer',
     large_chemical_reactor: 'large_chemical_reactor',
     distillation_tower: 'distillation_tower',
-}
+}; export const recipe_types_array = Object.values(recipe_types)
 
 export const enchantments = {
     bane_of_arthropods: 'bane_of_arthropods',
     smite: 'smite',
     efficiency: 'efficiency',
     fortune: 'fortune',
-}
+}; export const enchantments_array = Object.values(enchantments)
