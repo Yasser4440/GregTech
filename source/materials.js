@@ -3,12 +3,14 @@ import { material_textures, voltage_tiers,  } from "./data"
 const {ULV, LV, MV, HV, EV, IV, LuV, ZPM, UV, UHV, UEV, UIV, UXV, OpV, MAX} = voltage_tiers
 
 const {
-    dull, metallic, magnetic, shiny,
-    bright, diamond, emerald, horizontal,
-    vertical, ruby, opal, glass,
-    nether_star, fine, sand, wood,
-    rough, flint, lignite, quartz,
-    certus, lapis, radioactive
+    dull, metallic, shiny, bright, rough, fine, magnetic, radioactive,
+    horizontal: horizontal_gem, vertical: vertical_gem,
+    diamond: diamond_texture, emerald: emerald_texture,
+    lapis: lapis_texture, ruby: ruby_texture, opal: opal_texture,
+    quartz: quartz_texture, certus: certus_texture,
+    flint: flint_texture, lignite: lignite_texture,
+    glass: glass_texture, nether_star: nether_star_texture,
+    sand: sand_texture, wood: wood_texture,
 } = material_textures
 
 // Material Forms:
@@ -50,7 +52,6 @@ const FLUID_GENERIC = 'FLUID_GENERIC', LIQUID_GENERIC = 'LIQUID_GENERIC'
 
 const materials = {}
 export default materials
-
 export const elements = {
     hydrogen: {
         forms: [gas],
@@ -85,7 +86,7 @@ export const elements = {
         element: {symbol: 'He-3', p: 2, n: 1},
     },
     lithium: {
-        forms: [dust, liquid, ore],
+        forms: [liquid, ore],
         properties: { temperature: 454 },
         color: [0xd7e7ee, 0xBDC7DB],
         element: {symbol: 'Li', p: 3, n: 4},
@@ -168,7 +169,7 @@ export const elements = {
         element: {symbol: 'P', p: 15, n: 15},
     },
     sulfur: {
-        forms: [dust, ore],
+        forms: [ore],
         color: [0xfdff31, 0xffb400],
         flags: [FLAMMABLE],
         element: {symbol: 'S', p: 16, n: 16},
@@ -269,7 +270,7 @@ export const elements = {
     },
     copper: {
         forms: [ingot, liquid, ore],
-        properties: { harvest_level: 1, temperature: 1358 },
+        properties: { harvest_level: 1, temperature: 1358, arc_smelting_material: annealed_copper },
         color: [0xe77c56, 0xe4673e], texture: bright,
         flags: [EXT_METAL, MORTAR_GRINDABLE, GENERATE_SPRING, GENERATE_SPRING_SMALL, GENERATE_RING, GENERATE_FINE_WIRE, GENERATE_ROTOR],
         cable_stats: { voltage: MV, amperage: 1, loss: 2 },
@@ -877,13 +878,293 @@ export const elements = {
     },
 }; Object.assign(materials, elements)
 
+const {
+    hydrogen, oxygen, carbon, fluorine,
+    sulfur, magnesium, silicon, calcium, arsenic, manganese, potassium, lithium,
+    copper, tin, zinc, lead, antimony, iron, nickel, aluminium, cobalt, chromium, tantalum,
+    platinum, palladium, titanium, molybdenum, tungsten, barium, niobium, cerium,
+} = elements
+
 export const ores = {
     chalcopyrite: {
-        forms: [dust, ore],
+        forms: [ore],
+        properties: { harvest_level: 1 },
         color: [0x96c185, 0xe3af1a],
-        compound: ['copper', 'iron', ['sulfur', 2]],
-    }
+        compound: [copper, iron, [sulfur, 2]],
+    },
+    asbestos: {
+        forms: [ore],
+        properties: { harvest_level: 1, ore_yield: 3 },
+        color: [0xE6E6E6, 0xdbd7bf],
+        compound: [[magnesium, 3], [silicon, 2], [hydrogen, 4], [oxygen, 9]],
+        // .hazard(HazardProperty.HazardTrigger.INHALATION, GTMedicalConditions.ASBESTOSIS)
+    },
+    hematite: {
+        forms: [ore],
+        color: [0xff7161, 0x330817],
+        compound: [[iron, 2], [oxygen, 3]],
+    },
+    goethite: {
+        forms: [ore],
+        properties: { harvest_level: 1 },
+        color: [0x97873a, 0x313131], texture: metallic,
+        flags: [DECOMPOSITION_BY_CENTRIFUGING, BLAST_FURNACE_CALCITE_TRIPLE],
+        compound: [iron, hydrogen, [oxygen, 2]],
+    },
+    calcite: {
+        forms: [ore],
+        properties: { harvest_level: 1 },
+        color: [0xfffef8, 0xbbaf62],
+        compound: [calcium, carbon, [oxygen, 3]],
+    },
+    cassiterite: {
+        forms: [ore],
+        properties: { harvest_level: 1, ore_yield: 2 },
+        color: [0x89847e, 0x3b3b35], texture: rough,
+        compound: [tin, [oxygen, 2]],
+    },
+    cassiterite_sand: {
+        forms: [ore],
+        properties: { harvest_level: 1, ore_yield: 2 },
+        color: [0x89847e, 0x3b3b35], texture: sand_texture,
+        compound: [tin, [oxygen, 2]],
+    },
+    sheldonite: { // original id was cooperite
+        name: 'Sheldonite', 
+        forms: [ore],
+        properties: { harvest_level: 1 },
+        color: [0xe9ffa7, 0x665f2f], texture: metallic,
+        compound: [[platinum, 3], nickel, sulfur, palladium],
+    },
+    chromite: {
+        forms: [ore],
+        properties: { harvest_level: 1 },
+        color: [0xc5c1a8, 0x4c1a69], texture: metallic,
+        compound: [iron, [chromium, 2], [oxygen, 4]],
+    },
+    cobaltite: {
+        forms: [ore],
+        properties: { harvest_level: 1 },
+        color: [0x1975ff, 0x56071f], texture: metallic,
+        compound: [cobalt, arsenic, sulfur],
+    },
+    galena: {
+        forms: [ore],
+        properties: { harvest_level: 3 },
+        color: [0xf3e8fa, 0x331d42], texture: metallic,
+        flags: [NO_SMELTING],
+        compound: [lead, sulfur],
+    },
+    garnierite: {
+        forms: [ore],
+        properties: { harvest_level: 3 },
+        color: [0x32c880, 0x344028], texture: metallic,
+        compound: [nickel, oxygen],
+    },
+    ilmenite: {
+        forms: [ore],
+        properties: { harvest_level: 3 },
+        color: [0x2b2a24, 0x2b1700], texture: metallic,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: [iron, titanium, [oxygen, 3]],
+    },
+    bauxite: {
+        forms: [ore],
+        properties: { harvest_level: 1 },
+        color: [0xcfb853, 0xe6220c],
+        flags: [DISABLE_DECOMPOSITION],
+        compound: [[aluminium, 2], [oxygen, 3]],
+    },
+    magnesite: {
+        forms: [ore],
+        color: [0xfbfbf6, 0x80705e], texture: rough,
+        compound: [magnesium, carbon, [oxygen, 3]],
+    },
+    magnetite: {
+        forms: [ore],
+        color: [0x9d9d9d, 0x06070e], texture: metallic,
+        compound: [[iron, 3], [oxygen, 4]],
+    },
+    molybdenite: {
+        forms: [ore],
+        color: [0xe3ddc3, 0x191919], texture: metallic,
+        compound: [molybdenum, [sulfur, 2]],
+    },
+    wulfenite: {
+        forms: [ore],
+        properties: { harvest_level: 3 },
+        color: [0xff9000, 0xFF0000],
+        compound: [lead, molybdenum, [oxygen, 4]],
+    },
+    powellite: {
+        forms: [ore],
+        color: [0xd8cfac, 0xbc7a2c],
+        compound: [calcium, molybdenum, [oxygen, 4]],
+    },
+    pyrite: {
+        forms: [ore],
+        properties: { harvest_level: 1 },
+        color: [0xfffee6, 0xb69f4e], texture: rough,
+        flags: [BLAST_FURNACE_CALCITE_DOUBLE],
+        compound: [iron, [sulfur, 2]],
+    },
+    pyrolusite: {
+        forms: [ore],
+        color: [0xc7b5ab, 0x595756],
+        compound: [manganese, [oxygen, 2]],
+    },
+    saltpeter: {
+        forms: [ore],
+        properties: { harvest_level: 1, ore_yield: 2 },
+        color: [0xE6E6E6, 0xe6e1cf], texture: fine,
+        flags: [NO_SMASHING, NO_SMELTING, FLAMMABLE],
+        compound: [potassium, nitrogen, [oxygen, 3]],
+    },
+    scheelite: {
+        forms: [ore],
+        properties: { harvest_level: 3 },
+        color: [0xd7e8b3, 0x143cae],
+        flags: [DISABLE_DECOMPOSITION],
+        compound: [calcium, tungsten, [oxygen, 4]],
+        formula: 'Ca(WO3)O',
+    },
+    tantalite: {
+        forms: [ore],
+        properties: { harvest_level: 3 },
+        color: [0x4e6b94, 0x632300], texture: metallic,
+        compound: [manganese, [tantalum, 2], [oxygen, 6]],
+    },
+    sphalerite: {
+        forms: [ore],
+        properties: { harvest_level: 1 },
+        color: [0xffdc88, 0x0f1605],
+        flags: [DISABLE_DECOMPOSITION],
+        compound: [zinc, sulfur],
+    },
+    stibnite: {
+        forms: [ore],
+        color: [0x656565, 0x0a1432], texture: metallic,
+        flags: [DECOMPOSITION_BY_CENTRIFUGING],
+        compound: [[antimony, 2], [sulfur, 3]],
+    },
+    tetrahedrite: {
+        forms: [ore],
+        color: [0xa3a09b, 0x143313],
+        compound: [[copper, 2], iron, antimony, [sulfur, 3]],
+    },
+    tungstate: {
+        forms: [ore],
+        properties: { harvest_level: 3 },
+        color: [0xe0ffc4, 0xab4400],
+        flags: [DISABLE_DECOMPOSITION],
+        compound: [tungsten, [lithium, 2], [oxygen, 4]],
+        formula: 'Li2(WO3)O',
+    },
+    uraninite: {
+        forms: [ore],
+        properties: { harvest_level: 3 },
+        attributes: [emissive_ore],
+        color: [0xffd52e, 0x17212b], texture: metallic,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: [uranium238, [oxygen, 2]],
+        formula: 'UO2'
+    },
+    yellow_limonite: {
+        name: 'Limonite',
+        forms: [ore],
+        color: [0xf5e315, 0xc06f33], texture: metallic,
+        flags: [DECOMPOSITION_BY_CENTRIFUGING, BLAST_FURNACE_CALCITE_DOUBLE],
+        compound: [iron, hydrogen, [oxygen, 2]],
+        // YellowLimonite = Limonite;
+    },
+    graphite: {
+        forms: [ore],
+        color: [0xa8a89e, 0x172602],
+        flags: [NO_SMELTING, FLAMMABLE, DISABLE_DECOMPOSITION],
+        compound: [carbon],
+    },
+    bornite: {
+        forms: [ore],
+        properties: { harvest_level: 1 },
+        color: [0xffe05a, 0x442602], texture: rough,
+        compound: [[copper, 5], iron, [sulfur, 4]],
+    },
+    chalcocite: {
+        forms: [ore],
+        color: [0x657882, 0x33302e], texture: emerald,
+        compound: [[copper, 2], sulfur],
+    },
+    bastnasite: {
+        forms: [ore],
+        properties: { ore_yield: 2 },
+        color: [0xcaab60, 0xc8502d], texture: fine,
+        compound: [cerium, carbon, fluorine, [oxygen, 3]],
+    },
+    pentlandite: {
+        forms: [ore],
+        color: [0xe3cf13, 0x29315b],
+        compound: [[nickel, 9], [sulfur, 8]],
+    },
+    spodumene: {
+        forms: [ore],
+        color: [0xffbcbc, 0xc490ff],
+        compound: [lithium, aluminium, [silicon, 2], [oxygen, 6]],
+    },
+    lepidolite: {
+        forms: [ore],
+        properties: { ore_yield: 2 },
+        color: [0xffdae4, 0x75376f], texture: fine,
+        compound: [potassium, [lithium, 3], [aluminium, 4], [fluorine, 2], [oxygen, 10]],
+    },
+    glauconite_sand: {
+        forms: [ore],
+        properties: { ore_yield: 3 },
+        color: [0x1da351, 0x1a6e8f], texture: sand,
+        compound: [potassium, [magnesium, 2], [aluminium, 2], [silicon, 3], [oxygen, 12], [hydrogen, 2], water],
+    },
+    mica: {
+        forms: [ore],
+        properties: { ore_yield: 2 },
+        color: [0xecfeff, 0xc2a03c], texture: fine,
+        compound: [potassium, [aluminium, 3], [silicon, 3], [fluorine, 2], [oxygen, 10]],
+    },
+    barite: {
+        forms: [ore],
+        color: [0xe8e2d1, 0xf4b74b],
+        compound: [barium, sulfur, [oxygen, 4]],
+    },
+    alunite: {
+        forms: [ore],
+        properties: { ore_yield: 3 },
+        color: [0xfbd677, 0xe11e0a], texture: metallic,
+        compound: [potassium, [aluminium, 2], [silicon, 2], [hydrogen, 6], [oxygen, 14]],
+    },
+    talc: {
+        forms: [ore],
+        properties: { ore_yield: 2 },
+        color: [0xebffe9, 0x6fe19b], texture: fine,
+        compound: [[magnesium, 3], [silicon, 4], [hydrogen, 2], [oxygen, 12]],
+    },
+    soapstone: {
+        forms: [ore],
+        properties: { harvest_level: 1, ore_yield: 3 },
+        color: [0x5a7261, 0x464c4b], texture: rough,
+        compound: [[magnesium, 3], [silicon, 4], [hydrogen, 2], [oxygen, 12]],
+    },
+    kyanite: {
+        forms: [ore],
+        color: [0xd5ffff, 0x5a69d6], texture: flint,
+        compound: [[aluminium, 2], silicon, [oxygen, 5]],
+    },
+    pyrochlore: {
+        forms: [ore],
+        color: [0x5b4838, 0x331400], texture: metallic,
+        compound: [[calcium, 2], [niobium, 2], [oxygen, 6], fluorine],
+    },
 }; Object.assign(materials, ores)
+
+export const alloys = {
+}; Object.assign(materials, alloys)
 
 export const chemicals = {
 
