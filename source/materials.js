@@ -1,5 +1,8 @@
 import { booster_gases, enchantments, fluid_pipe_properties, material_forms, material_shapes, material_textures, voltage_tiers,  } from "./data.js"
-import { freeze, validate_materials as validate } from "./validators.js"
+import { validate_materials as validate } from "./validators.js"
+import { recursive_freeze as freeze } from "../node_scripts/utilities.js"
+// placeholders
+function modify() {}; function sanitize() {}
 
 
 const {ULV, LV, MV, HV, EV, IV, LuV, ZPM, UV, UHV, UEV, UIV, UXV, OpV, MAX} = voltage_tiers
@@ -63,8 +66,8 @@ const unbreakable = 'unbreakable', magnetic_tool = 'magnetic'
 // Localization Keys
 const FLUID_GENERIC = 'FLUID_GENERIC', LIQUID_GENERIC = 'LIQUID_GENERIC'
 
-const materials = {}
-export default materials
+const materials = {}; export default materials
+
 export const elements = {
     hydrogen: {
         forms: [gas],
@@ -223,8 +226,8 @@ export const elements = {
         armor_stats: { protection: [4, 9, 7, 4], toughness: 5, knockback_resistance: 0.4, durability_multiplier: 48, enchantability: 18 },
         rotor_stats: { power: 130, efficiency: 115, damage: 3, durability: 1600 },
         fluid_pipe: { temperature: 2426, throughput: 150, properties: [gas_proof] },
-        blasting: { temperature: 1941, voltage: HV, duration: 1500, booster_gas: helium_boost },
-        cooling: { voltage: HV },
+        blasting: { temperature: 1941, voltage: HV.adjusted, duration: 1500, booster_gas: helium_boost },
+        cooling: { voltage: HV.adjusted },
         element: {symbol: 'Ti', p: 22, n: 26},
     },
     vanadium: {
@@ -353,7 +356,7 @@ export const elements = {
     niobium: {
         forms: [ingot, fluid],
         color: [0xb494b4, 0x4b3f4d], texture: bright,
-        blasting: { temperature: 2750, voltage: HV, duration: 900, booster_gas: helium_boost },
+        blasting: { temperature: 2750, voltage: HV.adjusted, duration: 900, booster_gas: helium_boost },
         element: {symbol: 'Nb', p: 41, n: 53},
     },
     molybdenum: {
@@ -373,24 +376,24 @@ export const elements = {
         forms: [ingot, fluid],
         color: [0xa2cde0, 0x3c7285], texture: shiny,
         flags: [GENERATE_FOIL, GENERATE_GEAR],
-        blasting: { temperature: 2607, voltage: EV, duration: 900, booster_gas: helium_boost },
-        cooling: { voltage: HV, duration: 200 },
+        blasting: { temperature: 2607, voltage: EV.adjusted, duration: 900, booster_gas: helium_boost },
+        cooling: { voltage: HV.adjusted, duration: 200 },
         element: {symbol: 'Ru', p: 44, n: 57},
     },
     rhodium: {
         forms: [ingot, fluid],
         color: [0xfd46b1, 0xDC0C58], texture: bright,
         flags: [EXT2_METAL, GENERATE_GEAR, GENERATE_FINE_WIRE],
-        blasting: { temperature: 2237, voltage: EV, duration: 1200, booster_gas: helium_boost },
-        cooling: { voltage: HV },
+        blasting: { temperature: 2237, voltage: EV.adjusted, duration: 1200, booster_gas: helium_boost },
+        cooling: { voltage: HV.adjusted },
         element: {symbol: 'Rh', p: 45, n: 58},
     },
     palladium: {
         forms: [ingot, fluid, ore],
         color: [0xbd92b5, 0x535b14], texture: shiny,
         flags: [EXT_METAL, GENERATE_FOIL, GENERATE_FINE_WIRE],
-        blasting: { temperature: 1828, voltage: HV, duration: 900, booster_gas: nitrogen_boost },
-        cooling: { voltage: HV, duration: 150 },
+        blasting: { temperature: 1828, voltage: HV.adjusted, duration: 900, booster_gas: nitrogen_boost },
+        cooling: { voltage: HV.adjusted, duration: 150 },
         element: {symbol: 'Pd', p: 46, n: 60},
     },
     silver: {
@@ -487,8 +490,8 @@ export const elements = {
         properties: { temperature: 1345 },
         color: [0xc2c289, 0x235254], texture: metallic,
         flags: [GENERATE_LONG_ROD],
-        blasting: { temperature: 5400, voltage: EV, duration: 1500, booster_gas: argon_boost },
-        cooling: { voltage: HV, duration: 200 },
+        blasting: { temperature: 5400, voltage: EV.adjusted, duration: 1500, booster_gas: argon_boost },
+        cooling: { voltage: HV.adjusted, duration: 200 },
         element: {symbol: 'Sm', p: 62, n: 88},
     },
     europium: {
@@ -498,8 +501,8 @@ export const elements = {
         flags: [STD_METAL, GENERATE_LONG_ROD, GENERATE_FINE_WIRE, GENERATE_SPRING, GENERATE_SPRING_SMALL, GENERATE_FOIL, GENERATE_FRAME],
         cable_stats: { voltage: UHV, amperage: 2, loss: 32 },
         fluid_pipe: { temperature: 7750, throughput: 300, properties: [gas_proof]},
-        blasting: { temperature: 6000, voltage: IV, duration: 180, booster_gas: helium_boost },
-        cooling: { voltage: HV },
+        blasting: { temperature: 6000, voltage: IV.adjusted, duration: 180, booster_gas: helium_boost },
+        cooling: { voltage: HV.adjusted },
         element: {symbol: 'Eu', p: 63, n: 88},
     },
     gadolinium: {
@@ -555,8 +558,8 @@ export const elements = {
         rotor_stats: { power: 130, efficiency: 115, damage: 3, durability: 2560 },
         cable_stats: { voltage: IV, amperage: 2, loss: 2 },
         fluid_pipe: { temperature: 4618, throughput: 50, properties: [gas_proof, acid_proof, plasma_proof] },
-        blasting: { temperature: 3600, voltage: EV, duration: 1800, booster_gas: helium_boost },
-        cooling: { voltage: HV, duration: 300 },
+        blasting: { temperature: 3600, voltage: EV.adjusted, duration: 1800, booster_gas: helium_boost },
+        cooling: { voltage: HV.adjusted, duration: 300 },
         element: {symbol: 'W', p: 74, n: 109},
     },
     rhenium: {
@@ -571,8 +574,8 @@ export const elements = {
         rotor_stats: { power: 160, efficiency: 185, damage: 4, durability: 1280 },
         cable_stats: { voltage: LuV, amperage: 4, loss: 2 },
         item_pipe: { speed: 8, priority: 256 },
-        blasting: { temperature: 4500, voltage: LuV, duration: 1000, booster_gas: argon_boost },
-        cooling: { voltage: EV, duration: 300 },
+        blasting: { temperature: 4500, voltage: LuV.adjusted, duration: 1000, booster_gas: argon_boost },
+        cooling: { voltage: EV.adjusted, duration: 300 },
         element: {symbol: 'Os', p: 76, n: 114},
     },
     iridium: {
@@ -582,8 +585,8 @@ export const elements = {
         flags: [EXT2_METAL, GENERATE_FINE_WIRE, GENERATE_GEAR, GENERATE_FRAME],
         rotor_stats: { power: 130, efficiency: 115, damage: 3, durability: 2560 },
         fluid_pipe: { temperature: 3398, throughput: 250, properties: [gas_proof, cryogenic_proof]},
-        blasting: { temperature: 4500, voltage: IV, duration: 1100, booster_gas: argon_boost },
-        cooling: { voltage: EV, duration: 250 },
+        blasting: { temperature: 4500, voltage: IV.adjusted, duration: 1100, booster_gas: argon_boost },
+        cooling: { voltage: EV.adjusted, duration: 250 },
         element: {symbol: 'Ir', p: 77, n: 115},
     },
     platinum: {
@@ -838,8 +841,8 @@ export const elements = {
         color: [0x81808a, 0x351d4b], texture: shiny,
         flags: [GENERATE_FOIL, GENERATE_BOLT_SCREW, GENERATE_GEAR, GENERATE_SPRING],
         cable_stats: { voltage: ZPM, amperage: 6, loss: 4 },
-        blasting: { temperature: 7200, voltage: LuV, duration: 1500, booster_gas: argon_boost },
-        cooling: { voltage: IV, duration: 300 },
+        blasting: { temperature: 7200, voltage: LuV.adjusted, duration: 1500, booster_gas: argon_boost },
+        cooling: { voltage: IV.adjusted, duration: 300 },
         element: {symbol: 'Ke', p: 125, n: 198},
     },
     naquadah: {
@@ -851,8 +854,8 @@ export const elements = {
         rotor_stats: { power: 160, efficiency: 105, damage: 4, durability: 1280 },
         cable_stats: { voltage: ZPM, amperage: 2, loss: 2 },
         fluid_pipe: { temperature: 3776, throughput: 200, properties: [gas_proof, cryogenic_proof, plasma_proof] },
-        blasting: { temperature: 5000, voltage: IV, duration: 600, booster_gas: argon_boost },
-        cooling: { voltage: EV, duration: 150 },
+        blasting: { temperature: 5000, voltage: IV.adjusted, duration: 600, booster_gas: argon_boost },
+        cooling: { voltage: EV.adjusted, duration: 150 },
         element: {symbol: 'Nq', p: 174, n: 352},
     },
     enriched_naquadah: {
@@ -861,8 +864,8 @@ export const elements = {
         attributes: [CUSTOM_STILL_TEXTURE, NO_FLUID_COLOR],
         color: [0x3C3C3C, 0x122f06], texture: metallic,
         flags: [EXT_METAL, GENERATE_FOIL],
-        blasting: { temperature: 7000, voltage: IV, duration: 1000, booster_gas: argon_boost },
-        cooling: { voltage: EV, duration: 150 },
+        blasting: { temperature: 7000, voltage: IV.adjusted, duration: 1000, booster_gas: argon_boost },
+        cooling: { voltage: EV.adjusted, duration: 150 },
         element: {symbol: 'Nq+', p: 174, n: 354},
     },
     naquadria: {
@@ -871,8 +874,8 @@ export const elements = {
         attributes: [CUSTOM_STILL_TEXTURE, NO_FLUID_COLOR],
         color: [0x1E1E1E, 0x59b3ff], texture: radioactive,
         flags: [EXT_METAL, GENERATE_FOIL, GENERATE_GEAR, GENERATE_FINE_WIRE, GENERATE_BOLT_SCREW],
-        blasting: { temperature: 9000, voltage: ZPM, duration: 1200, booster_gas: argon_boost },
-        cooling: { voltage: LuV, duration: 200 },
+        blasting: { temperature: 9000, voltage: ZPM.adjusted, duration: 1200, booster_gas: argon_boost },
+        cooling: { voltage: LuV.adjusted, duration: 200 },
         hazard: { radioactive: 3 },
         element: {symbol: '*Nq*', p: 174, n: 348},
     },
@@ -1398,7 +1401,7 @@ export const alloys = {
         color: [0xC2D2DF, 0x4c4238], texture: metallic,
         flags: [EXT_METAL, GENERATE_SPRING],
         cable_stats: { voltage: HV, amperage: 4, loss: 3 },
-        blasting: { temperature: 1800, voltage: HV, duration: 900, booster_gas: nitrogen_boost },
+        blasting: { temperature: 1800, voltage: HV.adjusted, duration: 900, booster_gas: nitrogen_boost },
         compound: ['iron', 'aluminium', 'chromium'],
     },
     magnalium: {
@@ -1416,8 +1419,8 @@ export const alloys = {
         color: [0xaf94b2, 0x5b4c6a], texture: metallic,
         flags: [EXT_METAL, GENERATE_SPRING],
         cable_stats: { voltage: EV, amperage: 4, loss: 4 },
-        blasting: { temperature: 2700, voltage: EV, duration: 1300, booster_gas: nitrogen_boost },
-        cooling: { voltage: HV },
+        blasting: { temperature: 2700, voltage: EV.adjusted, duration: 1300, booster_gas: nitrogen_boost },
+        cooling: { voltage: HV.adjusted },
         compound: [['nickel', 4], 'chromium'],
     },
     niobium_nitride: {
@@ -1435,8 +1438,8 @@ export const alloys = {
         flags: [EXT2_METAL, GENERATE_SPRING, GENERATE_SPRING_SMALL, GENERATE_FOIL, GENERATE_FINE_WIRE],
         fluid_pipe: { temperature: 5900, throughput: 175, properties: [gas_proof] },
         cable_stats: { voltage: LuV, amperage: 4, loss: 2 },
-        blasting: { temperature: 4500, voltage: HV, duration: 1500, booster_gas: argon_boost },
-        cooling: { voltage: HV, duration: 200 },
+        blasting: { temperature: 4500, voltage: HV.adjusted, duration: 1500, booster_gas: argon_boost },
+        cooling: { voltage: HV.adjusted, duration: 200 },
         compound: ['niobium', 'titanium'],
     },
     raw_platinum: {
@@ -1453,7 +1456,7 @@ export const alloys = {
         tool_stats: { speed: 3.0, damage: 8.0, durability: 768, level: 2, attack_speed: 0.3, enchantability: 33, enchantments: [[smite, 3]] },
         rotor_stats: { power: 100, efficiency: 160, damage: 2.0, durability: 196 },
         item_pipe: { speed: 2, priority: 1024 },
-        blasting: { temperature: 1700, voltage: MV, duration: 1000, booster_gas: nitrogen_boost },
+        blasting: { temperature: 1700, voltage: MV.adjusted, duration: 1000, booster_gas: nitrogen_boost },
         compound: ['copper', ['silver', 4]],
     },
     rose_gold: {
@@ -1464,7 +1467,7 @@ export const alloys = {
         tool_stats: { speed: 12.0, damage: 2.0, durability: 768, level: 2, enchantability: 33, enchantments: [[fortune, 2]] },
         rotor_stats: { power: 100, efficiency: 170, damage: 2.0, durability: 152 },
         item_pipe: { speed: 2, priority: 1024 },
-        blasting: { temperature: 1600, voltage: MV, duration: 1000, booster_gas: nitrogen_boost },
+        blasting: { temperature: 1600, voltage: MV.adjusted, duration: 1000, booster_gas: nitrogen_boost },
         compound: ['copper', ['gold', 4]],
     },
     black_bronze: {
@@ -1474,7 +1477,7 @@ export const alloys = {
         flags: [EXT2_METAL, GENERATE_GEAR],
         rotor_stats: { power: 100, efficiency: 155, damage: 2.0, durability: 256 },
         item_pipe: { speed: 2, priority: 1024 },
-        blasting: { temperature: 2000, voltage: MV, duration: 1000, booster_gas: nitrogen_boost },
+        blasting: { temperature: 2000, voltage: MV.adjusted, duration: 1000, booster_gas: nitrogen_boost },
         compound: ['gold', 'silver', ['copper', 3]],
     },
     bismuth_bronze: {
@@ -1483,7 +1486,7 @@ export const alloys = {
         color: [0xffd26f, 0x895f3d], texture: metallic,
         flags: [EXT2_METAL],
         rotor_stats: { power: 130, efficiency: 120, damage: 3.0, durability: 256 },
-        blasting: { temperature: 1100, voltage: MV, duration: 1000, booster_gas: nitrogen_boost },
+        blasting: { temperature: 1100, voltage: MV.adjusted, duration: 1000, booster_gas: nitrogen_boost },
         compound: ['bismuth', 'zinc', ['copper', 3]],
     },
     rtm_alloy: {
@@ -1492,8 +1495,8 @@ export const alloys = {
         color: 0x30306B, texture: shiny,
         flags: [GENERATE_SPRING],
         cable_stats: { voltage: EV, amperage: 6, loss: 2 },
-        blasting: { temperature: 3000, voltage: EV, duration: 1400, booster_gas: helium_boost },
-        cooling: { voltage: HV, duration: 250 },
+        blasting: { temperature: 3000, voltage: EV.adjusted, duration: 1400, booster_gas: helium_boost },
+        cooling: { voltage: HV.adjusted, duration: 250 },
         compound: [['ruthenium', 4], ['tungsten', 2], 'molybdenum'],
     },
     ruridit: {
@@ -1501,8 +1504,8 @@ export const alloys = {
         properties: { harvest_level: 3 },
         color: [0x88b5b9, 0x4e885c], texture: bright,
         flags: [GENERATE_FINE_WIRE, GENERATE_GEAR, GENERATE_LONG_ROD, GENERATE_FRAME, GENERATE_BOLT_SCREW],
-        blasting: { temperature: 4500, voltage: EV, duration: 1600, booster_gas: argon_boost },
-        cooling: { voltage: HV, duration: 300 },
+        blasting: { temperature: 4500, voltage: EV.adjusted, duration: 1600, booster_gas: argon_boost },
+        cooling: { voltage: HV.adjusted, duration: 300 },
         compound: [['ruthenium', 2], 'iridium'],
     },
     osmiridium: {
@@ -1512,8 +1515,8 @@ export const alloys = {
         flags: [EXT2_METAL, GENERATE_SMALL_GEAR, GENERATE_RING, GENERATE_ROTOR, GENERATE_ROUND, GENERATE_FINE_WIRE, GENERATE_GEAR],
         rotor_stats: { power: 130, efficiency: 130, damage: 3.0, durability: 3152 },
         item_pipe: { speed: 32, priority: 64 },
-        blasting: { temperature: 4500, voltage: LuV, duration: 900, booster_gas: argon_boost },
-        cooling: { voltage: EV, duration: 200 },
+        blasting: { temperature: 4500, voltage: LuV.adjusted, duration: 900, booster_gas: argon_boost },
+        cooling: { voltage: EV.adjusted, duration: 200 },
         compound: [['iridium', 3], 'osmium'],
     },
     soldering_alloy: {
@@ -1530,7 +1533,7 @@ export const alloys = {
         tool_stats: { speed: 7.0, damage: 5.0, durability: 1024, level: 3, enchantability: 14 },
         rotor_stats: { power: 160, efficiency: 115, damage: 4.0, durability: 480 },
         fluid_pipe: { temperature: 2428, throughput: 75, properties: [gas_proof, acid_proof, cryogenic_proof] },
-        blasting: { temperature: 1700, voltage: HV, duration: 1100, booster_gas: nitrogen_boost },
+        blasting: { temperature: 1700, voltage: HV.adjusted, duration: 1100, booster_gas: nitrogen_boost },
         compound: [['iron', 6], 'chromium', 'manganese', 'nickel'],
     },
     tin_alloy: {
@@ -1549,7 +1552,7 @@ export const alloys = {
         tool_stats: { speed: 10.0, damage: 7.0, durability: 2048, level: 4, attack_speed: 0.1, enchantability: 21 },
         rotor_stats: { power: 160, efficiency: 130, damage: 4.0, durability: 2048 },
         item_pipe: { speed: 16, priority: 128 },
-        blasting: { temperature: 2700, voltage: HV, duration: 1300, booster_gas: helium_boost },
+        blasting: { temperature: 2700, voltage: HV.adjusted, duration: 1300, booster_gas: helium_boost },
         compound: [['cobalt', 5], ['chromium', 2], 'nickel', 'molybdenum'],
     },
     yttrium_barium_cuprate: {
@@ -1558,8 +1561,8 @@ export const alloys = {
         color: [0x796d72, 0x260a3a], texture: metallic,
         flags: [EXT_METAL, GENERATE_FINE_WIRE, GENERATE_SPRING, GENERATE_SPRING_SMALL, GENERATE_FOIL, GENERATE_BOLT_SCREW],
         cable_stats: { voltage: UV, amperage: 4, loss: 4 },
-        blasting: { temperature: 4500, voltage: IV, duration: 1000, booster_gas: argon_boost },
-        cooling: { voltage: EV, duration: 150 },
+        blasting: { temperature: 4500, voltage: IV.adjusted, duration: 1000, booster_gas: argon_boost },
+        cooling: { voltage: EV.adjusted, duration: 150 },
         compound: ['yttrium', ['barium', 2], ['copper', 3], ['oxygen', 7]],
     },
     gallium_arsenide: {
@@ -1567,7 +1570,7 @@ export const alloys = {
         properties: { harvest_level: 1, temperature: 1511 },
         color: [0x938fff, 0x8c548c],
         flags: [STD_METAL, DECOMPOSITION_BY_CENTRIFUGING],
-        blasting: { temperature: 1200, voltage: MV, duration: 1200, booster_gas: nitrogen_boost },
+        blasting: { temperature: 1200, voltage: MV.adjusted, duration: 1200, booster_gas: nitrogen_boost },
         compound: ['arsenic', 'gallium'],
     },
     indium_gallium_phosphide: {
@@ -1601,8 +1604,8 @@ export const alloys = {
         color: [0x603c1a, 0x423e39], texture: metallic,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
         cable_stats: { voltage: MV, amperage: 4, critical_temperature: 78 },
-        blasting: { temperature: 2500, voltage: HV, duration: 1000, booster_gas: nitrogen_boost },
-        cooling: { voltage: MV, duration: 200 },
+        blasting: { temperature: 2500, voltage: HV.adjusted, duration: 1000, booster_gas: nitrogen_boost },
+        cooling: { voltage: MV.adjusted, duration: 200 },
         compound: ['magnesium', ['boron', 2]],
     },
     mercury_barium_calcium_cuprate: {
@@ -1612,8 +1615,8 @@ export const alloys = {
         color: [0x928547, 0x3f2e2e], texture: shiny,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
         cable_stats: { voltage: HV, amperage: 4, critical_temperature: 78 },
-        blasting: { temperature: 3300, voltage: HV, duration: 1500, booster_gas: nitrogen_boost },
-        cooling: { voltage: HV },
+        blasting: { temperature: 3300, voltage: HV.adjusted, duration: 1500, booster_gas: nitrogen_boost },
+        cooling: { voltage: HV.adjusted },
         compound: ['mercury', ['barium', 2], ['calcium', 2], ['copper', 3], ['oxygen', 8]],
     },
     uranium_triplatinum: {
@@ -1623,8 +1626,8 @@ export const alloys = {
         color: [0x457045, 0x66ff00], texture: radioactive,
         flags: [DECOMPOSITION_BY_CENTRIFUGING],
         cable_stats: { voltage: EV, amperage: 6, critical_temperature: 30 },
-        blasting: { temperature: 4400, voltage: EV, duration: 1000, booster_gas: helium_boost },
-        cooling: { voltage: EV, duration: 200 },
+        blasting: { temperature: 4400, voltage: EV.adjusted, duration: 1000, booster_gas: helium_boost },
+        cooling: { voltage: EV.adjusted, duration: 200 },
         formula: 'UPt3',
         compound: ['uranium', ['platinum', 3]],
     },
@@ -1635,8 +1638,8 @@ export const alloys = {
         color: [0x850e85, 0x332f33], texture: shiny,
         flags: [DECOMPOSITION_BY_CENTRIFUGING],
         cable_stats: { voltage: IV, amperage: 6, critical_temperature: 30 },
-        blasting: { temperature: 5200, voltage: EV, duration: 1500, booster_gas: helium_boost },
-        cooling: { voltage: IV, duration: 200 },
+        blasting: { temperature: 5200, voltage: EV.adjusted, duration: 1500, booster_gas: helium_boost },
+        cooling: { voltage: IV.adjusted, duration: 200 },
         compound: ['samarium', 'iron', 'arsenic', 'oxygen'],
     },
     indium_tin_barium_titanium_cuprate: {
@@ -1646,8 +1649,8 @@ export const alloys = {
         color: [0x686760, 0x673300], texture: metallic,
         flags: [DECOMPOSITION_BY_ELECTROLYZING, GENERATE_FINE_WIRE],
         cable_stats: { voltage: LuV, amperage: 8, critical_temperature: 5 },
-        blasting: { temperature: 6000, voltage: IV, duration: 1000, booster_gas: argon_boost },
-        cooling: { voltage: LuV },
+        blasting: { temperature: 6000, voltage: IV.adjusted, duration: 1000, booster_gas: argon_boost },
+        cooling: { voltage: LuV.adjusted },
         compound: [['indium', 4], ['tin', 2], ['barium', 2], 'titanium', ['copper', 7], ['oxygen', 14]],
     },
     uranium_rhodium_dinaquadide: {
@@ -1657,8 +1660,8 @@ export const alloys = {
         color: [0x232020, 0xff009c], texture: radioactive,
         flags: [DECOMPOSITION_BY_CENTRIFUGING, GENERATE_FINE_WIRE],
         cable_stats: { voltage: ZPM, amperage: 8, loss: 0, critical_temperature: 5 },
-        blasting: { temperature: 9000, voltage: IV, duration: 1500, booster_gas: argon_boost },
-        cooling: { voltage: ZPM, duration: 200 },
+        blasting: { temperature: 9000, voltage: IV.adjusted, duration: 1500, booster_gas: argon_boost },
+        cooling: { voltage: ZPM.adjusted, duration: 200 },
         formula: 'URhNq2',
         compound: ['uranium238', 'rhodium', ['naquadah', 2]],
     },
@@ -1669,8 +1672,8 @@ export const alloys = {
         color: [0xc6b083, 0x45063d], texture: metallic,
         flags: [DECOMPOSITION_BY_CENTRIFUGING, GENERATE_FINE_WIRE],
         cable_stats: { voltage: UV, amperage: 16, loss: 0, critical_temperature: 3 },
-        blasting: { temperature: 9900, voltage: LuV, duration: 1200, booster_gas: argon_boost },
-        cooling: { voltage: UV, duration: 200 },
+        blasting: { temperature: 9900, voltage: LuV.adjusted, duration: 1200, booster_gas: argon_boost },
+        cooling: { voltage: UV.adjusted, duration: 200 },
         compound: [['enriched_naquadah', 4], ['trinium', 3], ['europium', 2], 'duranium'],
     },
     ruthenium_trinium_americium_neutronate: {
@@ -1680,8 +1683,8 @@ export const alloys = {
         color: [0x897b76, 0x00c0ff], texture: radioactive,
         flags: [DECOMPOSITION_BY_ELECTROLYZING],
         cable_stats: { voltage: UHV, amperage: 24, loss: 0, critical_temperature: 3 },
-        blasting: { temperature: 10800, voltage: ZPM, duration: 1000, booster_gas: neon_boost },
-        cooling: { voltage: UHV, duration: 200 },
+        blasting: { temperature: 10800, voltage: ZPM.adjusted, duration: 1000, booster_gas: neon_boost },
+        cooling: { voltage: UHV.adjusted, duration: 200 },
         compound: ['ruthenium', ['trinium', 2], 'americium', ['neutronium', 2], ['oxygen', 8]],
     },
 }; Object.assign(materials, alloys)
@@ -1695,11 +1698,14 @@ export const intermediaries = {
     // Other
 }; Object.assign(materials, intermediaries)
 
+export const miscellaneous = {
+
+}; Object.assign(materials, miscellaneous)
+
+
 // Provide the material name inside the material object
-export const material_name = Symbol('name')
+export const material_name = Symbol('material_name')
 Object.entries(materials).forEach(([name, material]) => material[material_name] = name)
 
-// Validate, Set defaults, and Freeze the materials
-validate(materials)
-// set_defaults(materials)
-freeze(materials)
+// Apply Modifications, Validate, Sanitize, and Freeze the materials
+modify(materials); validate(materials); sanitize(materials); freeze(materials)

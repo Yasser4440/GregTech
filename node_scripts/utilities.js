@@ -39,3 +39,9 @@ export function format_json(json, indent = '') {
 let metadata_index = 0
 export const add_newline = (json) => json['_newline' + metadata_index++] = null
 export const add_comment = (json, comment) => json['_comment' + metadata_index++] = comment
+
+
+export function recursive_freeze(object) {
+    for (const value of Object.values(object)) if (value && typeof value == 'object') recursive_freeze(value)
+    Object.freeze(object)
+}

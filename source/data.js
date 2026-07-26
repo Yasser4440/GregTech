@@ -1,9 +1,4 @@
-
-export const voltage_tiers = {
-    ULV: 'ULV', LV: 'LV', MV: 'MV', HV: 'HV', EV: 'EV', IV: 'IV',
-    LuV: 'LuV', ZPM: 'ZPM', UV: 'UV', UHV: 'UHV', UEV: 'UEV', UIV: 'UIV',
-    UXV: 'UXV', OpV: 'OpV', MAX: 'MAX',
-}; export const voltage_tiers_array = Object.values(voltage_tiers)
+import { recursive_freeze } from "../node_scripts/utilities.js";
 
 export const material_textures = {
     dull: 'dull', metallic: 'metallic', shiny: 'shiny', bright: 'bright', fine: 'fine', rough: 'rough',
@@ -27,6 +22,19 @@ export const booster_gases = {
     neon: { gas: 'neon', amount: 25 },
     krypton: { gas: 'krypton', amount: 10 },
 }; export const booster_gases_array = Object.values(booster_gases).map(gas => gas.gas)
+
+export const voltage_tiers = {
+    ULV: 0, LV: 1, MV: 2, HV: 3, EV: 4, IV: 5,
+    LuV: 6, ZPM: 7, UV: 8, UHV: 8, UEV: 9, UIV: 10,
+    UXV: 11, OpV: 12, MAX: 13,
+}; for (const [v, n] of  Object.entries(voltage_tiers)) voltage_tiers[v] = {
+    full: 2**(2 * n + 3),
+    half: 2**(2 * n + 2),
+    adjusted: (2**(2 * n + 3) - 2**(2 * n - 1)) | 0,
+    adjusted_half: (2**(2 * n + 2) - 2**(2 * n - 2)) | 0,
+}; recursive_freeze(voltage_tiers)
+// Example: voltage_tiers.LV = { full: 32, half: 16, adjusted: 30, adjusted_half: 15 }
+
 
 export const material_shapes = {
     // Dusts

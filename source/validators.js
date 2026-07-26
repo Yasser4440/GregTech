@@ -1,9 +1,12 @@
+import { recursive_freeze } from "../node_scripts/utilities.js"
+
 import {
     booster_gases_array as booster_gases,
     fluid_pipe_properties_array as fluid_pipe_properties,
     material_textures_array as textures,
-    voltage_tiers_array as voltage_tiers
+    voltage_tiers,
 } from "./data.js"
+import { recipe_name } from "./recipes.js"
 
 function expect_type(value, type, at) {
     if (type == 'array') {if (Array.isArray(value)) return true}
@@ -25,31 +28,41 @@ function has_value(array, value, at, type = 'string') {
     console.warn(`Unknown value at ${at}: ${value}`)
 }
 
-// Validate all the materials
-const allowed_properties = new Set([
-    'color', 'texture', // Appearance
-    'element', 'compound', 'formula', // Chemistry
-    'tool_stats', 'armor_stats', 'rotor_stats', // Equipment
-    'cable_stats', 'fluid_pipe', 'item_pipe', // Blocks
-    'blasting', 'cooling', // Recipes
-    'name', 'forms', 'hazard', // Other
-    // Work in Progress
-    'flags',
-    'liquid_stats',
-    'properties',
-    'attributes',
-])
-const element_structure = new Set(['symbol', 'p', 'n'])
-const cable_stats = new Set(['voltage', 'amperage', 'loss', 'critical_temperature'])
-const item_pipe_stats = new Set(['priority', 'speed'])
-const fluid_pipe_stats = new Set(['temperature', 'throughput', 'properties'])
-const rotor_stats = new Set(['power', 'efficiency', 'damage', 'durability'])
-const blasting_options = new Set(['temperature', 'voltage', 'duration', 'booster_gas'])
-const cooling_options = new Set(['voltage', 'duration'])
+const frozen_objects = [...Object.values(voltage_tiers)]
+export function recursive_clone(object) {
+    if (!object || typeof object != 'object') return object
+    if (frozen_objects.includes(object)) return object
+    if (Array.isArray(object)) return object.map(recursive_clone)
+    const clone_object = {}
+    for (const [key, value] of Object.entries(object)) clone_object[key] = recursive_clone(value)
+    return clone_object
+}
 
 export function validate_materials(materials) {
+    // Define Values
+    const allowed_properties = new Set([
+        'color', 'texture', // Appearance
+        'element', 'compound', 'formula', // Chemistry
+        'tool_stats', 'armor_stats', 'rotor_stats', // Equipment
+        'cable_stats', 'fluid_pipe', 'item_pipe', // Blocks
+        'blasting', 'cooling', // Recipes
+        'name', 'forms', 'hazard', // Other
+        // Work in Progress
+        'flags',
+        'liquid_stats',
+        'properties',
+        'attributes',
+    ])
+    const element_structure = new Set(['symbol', 'p', 'n'])
+    const cable_stats = new Set(['voltage', 'amperage', 'loss', 'critical_temperature'])
+    const item_pipe_stats = new Set(['priority', 'speed'])
+    const fluid_pipe_stats = new Set(['temperature', 'throughput', 'properties'])
+    const rotor_stats = new Set(['power', 'efficiency', 'damage', 'durability'])
+    const blasting_options = new Set(['temperature', 'voltage', 'duration', 'booster_gas'])
+    const cooling_options = new Set(['voltage', 'duration'])
+    
     // Protect the original object
-    materials = structuredClone(materials); freeze(materials)
+    materials = recursive_clone(materials); recursive_freeze(materials)
     // Validate each material
     for (const [material_id, material] of Object.entries(materials)) {
         // Validate the material properties
@@ -93,8 +106,8 @@ export function validate_materials(materials) {
             if (expect_object(stats, at)) {
                 // Report unknown properties
                 find_unknown_keys(stats, cable_stats, at)
-                // Search for voltage in voltage_tiers
-                has_value(voltage_tiers, stats.voltage, `${at}.voltage`)
+                // Expect voltage to be a voltage object
+                if (!Object.values(voltage_tiers).includes(stats.voltage)) console.warn(`Expected voltage object at ${at}.voltage, Got ${typeof stats.voltage}: ${JSON.stringify(stats.voltage)}`)
                 // Expect amperage to be a number
                 expect_type(stats.amperage, 'number', `${at}.amperage`)
                 // Expect loss to be a number
@@ -142,8 +155,8 @@ export function validate_materials(materials) {
                 find_unknown_keys(options, blasting_options, at)
                 // Expect temperature to be a number
                 expect_type(options.temperature, 'number', `${at}.temperature`)
-                // Search for voltage in voltage_tiers if it was defined
-                if ('voltage' in options) has_value(voltage_tiers, options.voltage, `${at}.voltage`)
+                // Expect voltage to be a number if it was defined
+                if ('voltage' in options) expect_type(options.voltage, 'number', `${at}.voltage`)
                 // Expect duration to be a number if it was defined
                 if ('duration' in options) expect_type(options.duration, 'number', `${at}.duration`)
                 // Search for the booster_gas in booster_gases_array if it was defined
@@ -155,8 +168,8 @@ export function validate_materials(materials) {
             if (expect_object(options, at)) {
                 // Report unknown properties
                 find_unknown_keys(options, cooling_options, at)
-                // Search for voltage in voltage_tiers if it was defined
-                if ('voltage' in options) has_value(voltage_tiers, options.voltage, `${at}.voltage`)
+                // Expect voltage to be a number if it was defined
+                if ('voltage' in options) expect_type(options.voltage, 'number', `${at}.voltage`)
                 // Expect duration to be a number if it was defined
                 if ('duration' in options) expect_type(options.duration, 'number', `${at}.duration`)
             }
@@ -188,9 +201,4 @@ export function validate_materials(materials) {
             } else console.warn(`Expected ${type} at ${at}, Got ${typeof value}: ${JSON.stringify(value)}`)
         }
     }
-}
-
-export function freeze(object) {
-    for (const value of Object.values(object)) if (value && typeof value == 'object') freeze(value)
-    Object.freeze(object)
 }
