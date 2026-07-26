@@ -1,8 +1,38 @@
-import { booster_gases, enchantments, fluid_pipe_properties, material_forms, material_shapes, material_textures, voltage_tiers,  } from "./data.js"
-import { validate_materials as validate } from "./validators.js"
+import { booster_gases, enchantments, fluid_pipe_properties, material_forms, material_name, material_shapes, material_textures, voltage_tiers,  } from "./data.js"
+import { validate_materials } from "./validators.js"
 import { recursive_freeze as freeze } from "../node_scripts/utilities.js"
+
 // placeholders
-function modify() {}; function sanitize() {}
+function modify() {}
+function sanitize() {
+    Object.values(materials).forEach(material => {
+        const forms = Array.isArray(material.forms) ? material.forms : (material.forms = [])
+        if (!forms.includes(material_forms.dust) && (
+            forms.includes(material_forms.ingot) ||
+            forms.includes(material_forms.ore) ||
+            forms.includes(material_forms.gem)
+        )) forms.push(material_forms.dust)
+        if (!forms.includes(material_forms.fluid) && (
+            forms.includes(material_forms.liquid) ||
+            forms.includes(material_forms.gas) ||
+            forms.includes(material_forms.plasma)
+        )) forms.push(material_forms.fluid)
+        const shapes = Array.isArray(material.shapes) ? material.shapes : (material.shapes = [])
+        if (forms.includes(material_forms.dust)) shapes.push(
+            material_shapes.dust,
+            material_shapes.small_dust,
+            material_shapes.tiny_dust,
+        )
+        if (forms.includes(material_forms.ore)) shapes.push(
+            material_shapes.raw_ore,
+            material_shapes.crushed_ore,
+            material_shapes.purified_ore,
+            material_shapes.refined_ore,
+            material_shapes.impure_dust,
+            material_shapes.pure_dust
+        )
+    })
+}
 
 
 const {ULV, LV, MV, HV, EV, IV, LuV, ZPM, UV, UHV, UEV, UIV, UXV, OpV, MAX} = voltage_tiers
@@ -14,7 +44,7 @@ const {
     quartz: quartz_texture, certus: certus_texture,
     flint: flint_texture, lignite: lignite_texture,
     glass: glass_texture, nether_star: nether_star_texture,
-    sand: sand_texture, wood: wood_texture,
+    sand: sand_texture, wood: wood_texture, custom_texture
 } = material_textures
 
 
@@ -894,14 +924,6 @@ export const elements = {
     },
 }; Object.assign(materials, elements)
 
-const {
-    hydrogen, oxygen, carbon, fluorine, chlorine,
-    sulfur, magnesium, silicon, calcium, arsenic, manganese, phosphorus, potassium, lithium, mercury, sodium,
-    copper, tin, zinc, lead, antimony, iron, nickel, aluminium, cobalt, chromium, tantalum, silver, gold,
-    titanium, molybdenum, tungsten, barium, niobium, cerium, beryllium, bismuth,
-    platinum, palladium, ruthenium, rhodium, iridium, osmium,
-} = elements
-
 export const ores = {
     chalcopyrite: {
         forms: [ore],
@@ -1442,12 +1464,6 @@ export const alloys = {
         cooling: { voltage: HV.adjusted, duration: 200 },
         compound: ['niobium', 'titanium'],
     },
-    raw_platinum: {
-        forms: [dust],
-        color: [0xa09a7b, 0x4e4e45], texture: metallic,
-        flags: [DISABLE_DECOMPOSITION],
-        compound: ['platinum', ['chlorine', 2]],
-    },
     sterling_silver: {
         forms: [ingot, liquid],
         properties: { temperature: 1258 },
@@ -1690,11 +1706,150 @@ export const alloys = {
 }; Object.assign(materials, alloys)
 
 export const chemicals = {
+    // Acids
+    hydrochloric_acid: {
+        forms: [liquid],
+        attributes: [acidic],
+        texture: custom_texture,
+        compound: ['hydrogen', 'chlorine'],
+    },
+    sulfuric_acid: {
+        forms: [liquid],
+        attributes: [acidic],
+        texture: custom_texture,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: [['hydrogen', 2], 'sulfur', ['oxygen', 4]],
+    },
+    nitric_acid: {
+        forms: [liquid],
+        attributes: [acidic],
+        color: 0xCCCC00,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['hydrogen', 'nitrogen', ['oxygen', 3]],
+    },
+    hydrofluoric_acid: {
+        forms: [liquid],
+        attributes: [acidic],
+        color: 0x0088AA,
+        compound: ['hydrogen', 'fluorine'],
+        // TODO HF poisoning .hazard(HazardProperty.HazardTrigger.ANY)
+    },
+    aqua_regia: {
+        forms: [liquid],
+        attributes: [acidic],
+        color: 0xFFB132,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['nitric_acid', ['hydrochloric_acid', 2]],
+    },
+    hypochlorous_acid: {
+        forms: [liquid],
+        attributes: [acidic],
+        color: 0x6F8A91,
+        compound: ['hydrogen', 'chlorine', 'oxygen'],
+    },
+    phosphoric_acid: {
+        forms: [liquid],
+        attributes: [acidic],
+        color: 0xDCDC01,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: [['hydrogen', 3], 'phosphorus', ['oxygen', 4]],
+    },
+    formic_acid: {
+        forms: [liquid],
+        attributes: [acidic],
+        color: 0xa6a6a6,
+        compound: ['carbon', ['hydrogen', 2], ['oxygen', 2]],
+        hazard: { trigger: INHALATION, type: CHEMICAL_BURNS },
+    },
+    fluoroantimonic_acid: {
+        forms: [liquid],
+        attributes: [acidic, CUSTOM_STILL_TEXTURE],
+        compound: [['hydrogen', 2], 'antimony', ['fluorine', 7]],
+    },
 
 }; Object.assign(materials, chemicals)
 
 export const intermediaries = {
     // Platline
+    platinum_group_sludge: {
+        forms: [dust],
+        properties: { harvest_level: 1 },
+        color: [0x343228, 0x001E00], texture: fine,
+        flags: [DISABLE_DECOMPOSITION],
+    },
+    raw_platinum: {
+        forms: [dust],
+        color: [0xa09a7b, 0x4e4e45], texture: metallic,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['platinum', ['chlorine', 2]],
+    },
+    raw_palladium: {
+        forms: [dust],
+        color: [0x5d4e1a, 0x33352d], texture: metallic,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['palladium', 'ammonia']
+
+    },
+    inert_metal_mixture: {
+        forms: [dust],
+        color: [0x2b0645, 0x6a1600], texture: metallic,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['rhodium', 'ruthenium', ['oxygen', 4]],
+    },
+    
+    rarest_metal_mixture: {
+        forms: [dust],
+        color: [0xca8832, 0xb21900], texture: shiny,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['iridium', 'osmium', ['oxygen', 4], 'water'],
+    },
+    platinum_sludge_residue: {
+        forms: [dust],
+        color: [0x5e4b40, 0x4b403d], texture: fine,
+        flags: [DECOMPOSITION_BY_CENTRIFUGING],
+        compound: [['silicon_dioxide', 2], ['gold', 3]]
+
+    },
+    ruthenium_tetroxide: {
+        forms: [dust],
+        color: [0xbeb809, 0x4e4e4d],
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['ruthenium', ['oxygen', 4]],
+    },
+    osmium_tetroxide: {
+        forms: [dust],
+        color: [0x578d9f, 0x394117], texture: metallic,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['osmium', ['oxygen', 4]],
+        // TODO Osmium tetroxide poisoning .hazard(HazardProperty.HazardTrigger.ANY)
+    },
+    iridium_chloride: {
+        forms: [dust],
+        color: [0x41460c, 0x00542e], texture: fine,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['iridium', ['chlorine', 3]],
+    },
+    iridium_metal_residue: {
+        forms: [dust],
+        color: [0x484a5e, 0x3e1c38], texture: metallic,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['iridium', 'chlorine', 3, 'platinum_sludge_residue']
+    },    
+    rhodium_sulfate: {
+        forms: [liquid],
+        properties: { temperature: 1128 },
+        color: 0xEEAA55,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: [['rhodium', 2], ['sulfur', 3], ['oxygen', 12]],
+        formula: 'Rh2(SO4)3',
+    },
+    acidic_osmium_solution: {
+        forms: [liquid],
+        attributes: [acidic],
+        color: 0xDAC5C5,
+        flags: [DISABLE_DECOMPOSITION],
+        compound: ['osmium', ['oxygen', 4], 'water', 'hydrochloric_acid'],
+    },
     // Other
 }; Object.assign(materials, intermediaries)
 
@@ -1704,8 +1859,7 @@ export const miscellaneous = {
 
 
 // Provide the material name inside the material object
-export const material_name = Symbol('material_name')
 Object.entries(materials).forEach(([name, material]) => material[material_name] = name)
 
 // Apply Modifications, Validate, Sanitize, and Freeze the materials
-modify(materials); validate(materials); sanitize(materials); freeze(materials)
+modify(materials); validate_materials(); sanitize(); freeze(materials)

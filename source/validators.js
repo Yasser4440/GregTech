@@ -1,12 +1,14 @@
 import { recursive_freeze } from "../node_scripts/utilities.js"
-
+import { fluid_states_array, material_forms, material_shapes_array, recipe_name } from "./data.js"
+import materials from "./materials.js"
+import recipes from "./recipes/chemical_lines.js"
 import {
     booster_gases_array as booster_gases,
     fluid_pipe_properties_array as fluid_pipe_properties,
+    recipe_types_array as recipe_types,
     material_textures_array as textures,
     voltage_tiers,
 } from "./data.js"
-import { recipe_name } from "./recipes.js"
 
 function expect_type(value, type, at) {
     if (type == 'array') {if (Array.isArray(value)) return true}
@@ -38,7 +40,7 @@ export function recursive_clone(object) {
     return clone_object
 }
 
-export function validate_materials(materials) {
+export function validate_materials() {
     // Define Values
     const allowed_properties = new Set([
         'color', 'texture', // Appearance
@@ -62,9 +64,9 @@ export function validate_materials(materials) {
     const cooling_options = new Set(['voltage', 'duration'])
     
     // Protect the original object
-    materials = recursive_clone(materials); recursive_freeze(materials)
+    const materials_clone = recursive_clone(materials); recursive_freeze(materials_clone)
     // Validate each material
-    for (const [material_id, material] of Object.entries(materials)) {
+    for (const [material_id, material] of Object.entries(materials_clone)) {
         // Validate the material properties
         find_unknown_keys(material, allowed_properties, material_id)
         // Expect name to be a string
@@ -199,6 +201,67 @@ export function validate_materials(materials) {
                 expect_type(value.gas, 'number', `${at}.gas`)
             // otherwise, it's a wrong type.
             } else console.warn(`Expected ${type} at ${at}, Got ${typeof value}: ${JSON.stringify(value)}`)
+        }
+    }
+}
+
+export function validate_recipes() {
+    // Define Values
+    const allowed_properties = new Set([
+        'machine', 'voltage', 'duration', 'inputs', 'outputs'
+    ])
+    const item_properties = new Set([
+        'item', 'material', 'shape', 'fluid', 'state', 'amount'
+    ])
+    for (const recipe of recipes) {
+        const at = recipe[recipe_name]
+        find_unknown_keys(recipe, allowed_properties, at)
+        // Check the recipe type
+        if ('machine' in recipe) has_value(recipe_types, recipe.machine, `(${at}).machine`)
+        // Check the voltage and duration
+        if ('voltage' in recipe) expect_type(recipe.voltage, 'number', `(${at}).voltage`)
+        if ('duration' in recipe) expect_type(recipe.duration, 'number', `(${at}).duration`)
+        // Validate inputs type
+        if ('inputs' in recipe) if (expect_type(recipe.inputs, 'array', `(${at}).inputs`)) recipe.inputs.forEach(input => {
+            // Expect input to be an object
+            if (expect_object(input, `(${at}).inputs`)) {
+                // Report unknown properties
+                find_unknown_keys(input, item_properties, at, `(${at}).inputs`)
+                // Expect the amount to be a number
+                if ('amount' in input) expect_type(input.amount, 'number', `(${at}).inputs.amount`)
+                // When using a shaped material
+                if ('material' in input) {
+                    // Check if the material is defined
+                    if (input.material in materials) {
+                        const material = materials[input.material]
+                        const shape = input.shape
+                        // Check if this material has no shapes
+                        const has_shapes = material.shapes.length || console.warn(`Using a material with no shapes: ${input.material}; at (${at}).inputs.shape`)
+                        // Check if the shape is defined
+                        const is_defined = has_shapes && 'shape' in input && has_value(material_shapes_array, shape, `(${at}).inputs.shape`)
+                        // Check if the material has that shape
+                        if (is_defined) if (!material.shapes.includes(shape)) console.warn(`The material ${input.material} missing the shape: ${shape}; at (${at}).inputs.shape`)
+                    // Report unknown material 
+                    } else console.warn(`Unknown material at (${at}).inputs: ${input.material}`)
+                } else if ('fluid' in input) {
+                    if (input.fluid in materials) {
+                        const fluid = input.fluid, state = input.state, material = materials[fluid]
+                        // Check if this material has a fluid form
+                        const is_fluid = material.forms.includes(material_forms.fluid) || console.warn(`Material is not a fluid at (${at}).inputs.fluid: ${input.fluid}`)
+                        // Check if the fluid state is valid
+                        const is_real = is_fluid && 'state' in input && (fluid_states_array.includes(state) || console.warn(`Invalid fluid state at (${at}).inputs.state: ${state}`))
+                        // check if the fluid has that fluid state
+                        is_real && (material.forms.includes(state) || console.warn(`Fluid ${input.fluid} doesn't have a ${state} at (${at}).inputs.state`))
+                    // Report unknown material 
+                    } else console.warn(`Unknown material at (${at}).inputs: ${input.fluid}`)
+                } else if ('item' in input) {
+
+                } else console.log(`Recipe input missing an item value at (${at}).inputs`)
+            }
+        })
+        // Validate outputs type
+        if ('outputs' in recipe) if (expect_type(recipe.outputs, 'array', `(${at}).outputs`)) {
+            
         }
     }
 }

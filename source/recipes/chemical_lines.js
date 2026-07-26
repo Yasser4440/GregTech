@@ -4,14 +4,14 @@ const {LV, MV, HV, EV, IV} = voltage_tiers
 
 const { chemical_reactor, mixer, centrifuge, electrolyzer, large_chemical_reactor, distillation_tower } = recipe_types
 
-const { purified_ore} = material_shapes
+const { purified_ore } = material_shapes
 
 const recipes = []; export default recipes
 
 const platline = [
     { // Platinum Sludge from Chalcopyrite
         machine: chemical_reactor,
-        duration: 50, voltage: LV,
+        duration: 50, voltage: LV.adjusted,
         inputs: [
             { material: 'chalcopyrite', shape: purified_ore },
             { fluid: 'nitric_acid', amount: 100 },
@@ -23,7 +23,7 @@ const platline = [
     },
     { // Platinum Sludge from Chalcocite
         machine: chemical_reactor,
-        duration: 50, voltage: LV,
+        duration: 50, voltage: LV.adjusted,
         inputs: [
             { material: 'chalcocite', shape: purified_ore },
             { fluid: 'nitric_acid', amount: 100 },
@@ -35,7 +35,7 @@ const platline = [
     },
     { // Platinum Sludge from Bornite
         machine: chemical_reactor,
-        duration: 50, voltage: LV,
+        duration: 50, voltage: LV.adjusted,
         inputs: [
             { material: 'bornite', shape: purified_ore },
             { fluid: 'nitric_acid', amount: 100 },
@@ -47,7 +47,7 @@ const platline = [
     },
     { // Platinum Sludge from Tetrahedrite
         machine: chemical_reactor,
-        duration: 50, voltage: LV,
+        duration: 50, voltage: LV.adjusted,
         inputs: [
             { material: 'tetrahedrite', shape: purified_ore },
             { fluid: 'nitric_acid', amount: 100 },
@@ -59,7 +59,7 @@ const platline = [
     },
     { // Platinum Sludge from Pentlandite
         machine: chemical_reactor,
-        duration: 50, voltage: LV,
+        duration: 50, voltage: LV.adjusted,
         inputs: [
             { material: 'pentlandite', shape: purified_ore },
             { fluid: 'nitric_acid', amount: 100 },
@@ -71,9 +71,9 @@ const platline = [
     },
     { // Platinum Sludge from Sheldonite
         machine: chemical_reactor,
-        duration: 50, voltage: LV,
+        duration: 50, voltage: LV.adjusted,
         inputs: [
-            { material: 'purified_ore', shape: purified_ore },
+            { material: 'sheldonite', shape: purified_ore },
             { fluid: 'nitric_acid', amount: 100 },
         ],
         outputs: [
@@ -83,7 +83,7 @@ const platline = [
     },
     { // Aqua Regia
         machine: mixer,
-        duration: 30, voltage: LV,
+        duration: 30, voltage: LV.adjusted,
         inputs: [
             { fluid: 'nitric_acid' },
             { fluid: 'hydrochloric_acid', amount: 2000 },
@@ -92,7 +92,7 @@ const platline = [
     },
     { // Process Platinum Group Sludge
         machine: centrifuge,
-        duration: 500, voltage: HV,
+        duration: 500, voltage: HV.adjusted,
         inputs: [
             { material: 'platinum_group_sludge', amount: 6},
             { fluid: 'aqua_regia', amount: 1200 }
@@ -107,7 +107,7 @@ const platline = [
     },
     { // Process Raw Platinum Powder
         machine: electrolyzer,
-        duration: 100, voltage: MV,
+        duration: 100, voltage: MV.adjusted,
         inputs: [{ material: 'raw_platinum', amount: 3 }],
         outputs: [
             { material: 'platinum' },
@@ -116,7 +116,7 @@ const platline = [
     },
     { // Process Raw Palladium Powder
         machine: chemical_reactor,
-        duration: 200, voltage: MV,
+        duration: 200, voltage: MV.adjusted,
         inputs: [
             { material: 'raw_palladium', amount: 5 },
             { fluid: 'hydrochloric_acid' },
@@ -128,7 +128,7 @@ const platline = [
     },
     { // Process Inert Metal Mixture
         machine: chemical_reactor,
-        duration: 450, voltage: EV,
+        duration: 450, voltage: EV.adjusted,
         inputs: [
             { material: 'inert_metal_mixture', amount: 6 },
             { fluid: 'sulfuric_acid', amount: 1500 },
@@ -141,7 +141,7 @@ const platline = [
     },
     { // Process Rhodium Sulfate
         machine: electrolyzer,
-        duration: 100, voltage: MV,
+        duration: 100, voltage: MV.adjusted,
         inputs: [{ fluid: 'rhodium_sulfate' }],
         outputs: [
             { material: 'rhodium', amount: 2 },
@@ -151,7 +151,7 @@ const platline = [
     },
     { // Process Ruthenium Tetroxide
         machine: chemical_reactor,
-        duration: 200, voltage: MV,
+        duration: 200, voltage: MV.adjusted,
         inputs: [
             { material: 'ruthenium_tetroxide', amount: 5 },
             { material: 'carbon', amount: 5 },
@@ -163,7 +163,7 @@ const platline = [
     },
     { // Process Rarest Metal Mixture
         machine: large_chemical_reactor,
-        duration: 400, voltage: IV,
+        duration: 400, voltage: IV.adjusted,
         inputs: [
             { material: 'rarest_metal_mixture', amount: 7 },
             { fluid: 'hydrochloric_acid', amount: 4000 },
@@ -176,7 +176,7 @@ const platline = [
     },
     { // Process Iridium Metal Residue
         machine: centrifuge,
-        duration: 200, voltage: MV,
+        duration: 200, voltage: MV.adjusted,
         inputs: [{ material: 'iridium_metal_residue', amount: 5 }],
         outputs: [
             { material: 'iridium_chloride', amount: 4 },
@@ -185,7 +185,7 @@ const platline = [
     },
     { // Process Iridium Chloride
         machine: chemical_reactor,
-        duration: 100, voltage: LV,
+        duration: 100, voltage: LV.adjusted,
         inputs: [
             { material: 'iridium_chloride', amount: 4 },
             { fluid: 'hydrogen', amount: 3000 },
@@ -197,7 +197,7 @@ const platline = [
     },
     { // Process Acidic Osmium Solution
         machine: distillation_tower,
-        duration: 400, voltage: MV,
+        duration: 400, voltage: MV.adjusted,
         inputs: [{ fluid: 'acidic_osmium_solution', amount: 2000 }],
         outputs: [
             { material: 'osmium_tetroxide', amount: 5 },
@@ -207,7 +207,7 @@ const platline = [
     },
     { // Process Osmium Tetroxide
         machine: chemical_reactor,
-        duration: 200, voltage: LV,
+        duration: 200, voltage: LV.adjusted,
         inputs: [
             { material: 'osmium_tetroxide', amount: 5 },
             { fluid: 'hydrogen', amount: 8000 },

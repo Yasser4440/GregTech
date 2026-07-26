@@ -1,11 +1,16 @@
 import { recursive_freeze } from "../node_scripts/utilities.js";
 
+// Symbols
+export const material_name = Symbol('material_name')
+export const recipe_name = Symbol('recipe_name')
+
+
 export const material_textures = {
     dull: 'dull', metallic: 'metallic', shiny: 'shiny', bright: 'bright', fine: 'fine', rough: 'rough',
     horizontal: 'horizontal', vertical: 'vertical', diamond: 'diamond', emerald: 'emerald', ruby: 'ruby', opal: 'opal',
     glass: 'glass', nether_star: 'nether_star', sand: 'sand', wood: 'wood',
     lignite: 'lignite', quartz: 'quartz', certus: 'certus', lapis: 'lapis', flint: 'flint',
-    magnetic: 'magnetic', radioactive: 'radioactive'
+    magnetic: 'magnetic', radioactive: 'radioactive', custom_texture: 'custom'
 }; export const material_textures_array = Object.values(material_textures)
 
 export const fluid_pipe_properties = {
@@ -82,6 +87,10 @@ export const material_shapes = {
     wrench_tool_head: 'wrench_tool_head',
 }; export const material_shapes_array = Object.values(material_shapes)
 
+export const fluid_states = {
+    liquid: 'liquid', gas: 'gas', plasma: 'plasma'
+}; export const fluid_states_array = Object.values(fluid_states)
+
 export const material_forms = {
     dust: 'dust', ore: 'ore', gem: 'gem', ingot: 'ingot',
     fluid: 'fluid', liquid: 'liquid', gas: 'gas', plasma: 'plasma',
@@ -101,4 +110,7 @@ export const enchantments = {
     smite: 'smite',
     efficiency: 'efficiency',
     fortune: 'fortune',
-}; export const enchantments_array = Object.values(enchantments)
+}; export const enchantments_array = Object.values(enchantments);
+
+
+
