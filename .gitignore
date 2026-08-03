@@ -1,2 +1,2 @@
-# This file is holds data specific to your machine
-node_scripts/local_settings.js
+# local_settings.js holds data specific to the contributor machine
+scripts/local_settings.js
