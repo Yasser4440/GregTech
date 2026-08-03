@@ -45,3 +45,14 @@ export function recursive_freeze(object) {
     for (const value of Object.values(object)) if (value && typeof value == 'object') recursive_freeze(value)
     Object.freeze(object)
 }
+
+export function copyExisting(fs, source, target) {
+    if (fs.existsSync(source)) fs.cpSync(source, target, {recursive: true})
+}
+
+export function snake_to_title(id) {
+    return id
+    .split('_') // Split Each word
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Upper the first letter of each word
+    .join(' ') // Join with spaces
+}

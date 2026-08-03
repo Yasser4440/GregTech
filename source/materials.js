@@ -1,6 +1,6 @@
 import { booster_gases, enchantments, fluid_pipe_properties, material_forms, material_name, material_shapes, material_textures, voltage_tiers,  } from "./data.js"
 import { validate_materials } from "./validators.js"
-import { recursive_freeze as freeze } from "../node_scripts/utilities.js"
+import { recursive_freeze as freeze } from "../scripts/utilities.js"
 
 // placeholders
 function modify() {}

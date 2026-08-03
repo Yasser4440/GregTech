@@ -1,4 +1,4 @@
-import { recursive_freeze } from "../node_scripts/utilities.js";
+import { recursive_freeze } from "../scripts/utilities.js";
 
 // Symbols
 export const material_name = Symbol('material_name')

@@ -1,4 +1,4 @@
-import { recursive_freeze } from "../node_scripts/utilities.js"
+import { recursive_freeze } from "../scripts/utilities.js"
 import { fluid_states_array, material_forms, material_shapes_array, recipe_name } from "./data.js"
 import materials from "./materials.js"
 import recipes from "./recipes/chemical_lines.js"

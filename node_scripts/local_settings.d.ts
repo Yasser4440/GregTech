@@ -3,7 +3,7 @@
 // Remove the ts type annotations, they are just here to help you configure this file
 
 // The path to your source folder relative to the current working directory
-// Your source folder is the one cloned from source control (where addon/assets/node_scripts are located)
+// Your source folder is the one cloned from source control (where addon/assets/scripts are located)
 // It generally goes inside your project folder
 // If your source folder is setting in the root of the project and is named "source", initialize this constant with "source"
 export const source_directory: string
@@ -25,3 +25,7 @@ export const mod_mappings: Record<string, string>
 // Values are the addon's texture paths
 // eg: "block/casings/solid/machine_casing_heatproof": "blocks/casings/heat_proof_invar_machine_casing",
 export const texture_mappings: Record<string, string>
+
+// The location to your local aseprite executable
+// eg: D:/Programs/Aseprite/build/bin/aseprite.exe
+export const aseprite: string
