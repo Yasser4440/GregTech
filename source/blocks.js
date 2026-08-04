@@ -58,6 +58,8 @@ export function make_blocks(bp, rp, texts) {
         }
         // Generate texture files
         if ('generated' in block) block.generated.forEach(command => {
+            if (!fs.existsSync(command.base)) { console.error(`Missing File: ${command.base}`); return}
+            if (!fs.existsSync(command.overlay)) { console.error(`Missing File: ${command.overlay}`); return}
             if (command.action == 'merge') execFileSync(aseprite, [ '--batch',
                 '--script-param', `base=${command.base}`,
                 '--script-param', `overlay=${command.overlay}`,
@@ -94,6 +96,24 @@ function make_block(identifier, block) {
             components,
             permutations,
         }
+    }
+    // Add block states
+    if ('states' in block) {
+        Object.entries(block.states).forEach(([state, values]) => states[state] = values)
+    }
+    // Add block permutations
+    if ('permutations' in block) {
+        block.permutations.forEach(({condition, components}) => {
+            if (typeof condition == 'string') condition = `q.block_state('${condition}')`
+            else if (Array.isArray(condition)) {
+                const value = typeof condition[1] == 'string' ? `'${condition[1]}'` : condition[1]
+                condition = `q.block_state('${condition[0]}') == ${value}`
+            } else condition = undefined
+            permutations.push({
+                condition,
+                components
+            })
+        })
     }
     // Enable placement in cardinal directions
     if (block.flags?.includes('face_cardinals')) {

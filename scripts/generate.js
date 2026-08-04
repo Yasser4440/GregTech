@@ -1,5 +1,5 @@
 import fs from "node:fs"; import node_path from "node:path"
-import { texture_mappings, mod_assets, textures_path, flipbooks } from "./local_settings.js"
+import { texture_mappings, mod_assets, textures_path } from "./local_settings.js"
 import { format_json } from "./utilities.js"
 import materials from '../source/materials.js'
 import recipes from "../source/recipes.js";
@@ -64,28 +64,43 @@ function rename_items(folder) {
     })
 }
 
+function get_mcmeta_files(path, mcmeta_files) {
+    if (fs.lstatSync(path).isDirectory())
+        fs.readdirSync(path).forEach(file => get_mcmeta_files(`${path}/${file}`, mcmeta_files))
+    else if (path.endsWith('.png.mcmeta')) mcmeta_files.push(path)
+    return mcmeta_files
+}
 function make_flipbooks() {
-    const json = {}
+    const processed_path = `${mod_assets}/processed.json`
+    const processed = fs.existsSync(processed_path) ? JSON.parse(fs.readFileSync(processed_path, {encoding: 'utf-8'})) : []
+    const new_processed = []
+    const blocks_path = `${mod_assets}/gtceu/textures/block`
+    const output_file = ['const unprocessed = {\n']
 
-    for (const [key, value] of Object.entries(flipbooks)) {
-        const file_text = fs.readFileSync(`${mod_assets}/${textures_path}/${value}`, {encoding: 'utf-8'})
-        const file_json = JSON.parse(file_text).animation
-        let frames = undefined
-        if (file_json.frames) {
-            frames = []
-            for (const frame of file_json.frames) {
-                if (typeof frame == 'number') frames.push(frame); else {
+    get_mcmeta_files(blocks_path, []).forEach(path => {
+        const name = path.replace(`${blocks_path}/`, '').replace('.png.mcmeta', '')
+        if (processed.includes(name)) return
+        const animation = JSON.parse(fs.readFileSync(path, {encoding: 'utf-8'})).animation
+        if (!animation) return
+        output_file.push(`    "textures/blocks/${name}": {\n`)
+        if ('frametime' in animation) output_file.push(`        ticks_per_frame: ${animation.frametime},\n`)
+        if (animation.frames) {
+            const frames = []
+            for (const frame of animation.frames) {
+                if (typeof frame == 'number') {frames.push(frame)} else {
                     const {index, time} = frame
-                    for (let t = 0; t < time; t += file_json.frametime) frames.push(index)
+                    for (let t = 0; t < time; t += animation.frametime) frames.push(index)
                 }
             }
+            output_file.push(`        frames: [${frames.join(', ')}],\n`)
         }
-        const flipbook = json[`textures/${key}`] = {}
-        flipbook.ticks_per_frame = file_json.frametime
-        if (frames) flipbook.frames = frames
-    }
-
-    fs.writeFileSync(`${output}/flipbook_textures.json`, format_json(json))
+        if (!animation.interpolate) output_file.push(`        blend_frames: false,\n`)
+        output_file.push(`    },\n`)
+        new_processed.push(name)
+    })
+    output_file.push('}\n')
+    fs.writeFileSync(`${output}/flipbooks.js`, output_file.join(''))
+    fs.writeFileSync(`${output}/processed.json`, JSON.stringify(new_processed, null, 4))
 }
 
 
