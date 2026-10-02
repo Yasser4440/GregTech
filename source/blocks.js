@@ -4,7 +4,7 @@ import { execFileSync } from "node:child_process";
 import { aseprite } from "../scripts/local_settings.js";
 
 import { make_controllers as make_multiblock_controllers, make_casings as make_multiblock_casings } from "./data/multiblocks.js"
-import { make_casings as make_voltage_casings } from "./data/machines.js";
+import { make_hulls as make_machine_hulls, make_casings as make_voltage_casings } from "./data/machines.js";
 import flipbooks from "./data/flipbooks.js";
 
 // Create a container for all the blocks
@@ -14,6 +14,7 @@ const blocks = {}
 make_multiblock_casings(blocks)
 make_multiblock_controllers(blocks)
 make_voltage_casings(blocks)
+make_machine_hulls(blocks)
 // make_voltage_machines(blocks)
 
 // Save the ids in the block objects

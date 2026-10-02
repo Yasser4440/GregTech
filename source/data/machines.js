@@ -20,3 +20,31 @@ export function make_casings(blocks) {
         }
     }
 }
+
+export function make_hulls(blocks) {
+    for (const VOLTAGE of Object.keys(voltage_tiers)) {
+        const voltage = VOLTAGE.toLowerCase()
+        const casing = `${voltage}_machine_casing`
+        const hull = `${voltage}_machine_hull`
+        blocks[hull] = {
+            folder: 'machine_hulls',
+            name: `${VOLTAGE} Machine Hull`,
+            model: {
+                up: `${casing}_top`,
+                down: `${casing}_bottom`,
+                '*': `${casing}_side`,
+                south: hull,
+            },
+            textures: {
+                [hull]: `textures/blocks/machine_hulls/${hull}`,
+            },
+            generated: [
+                { action: 'merge',
+                    base: `assets/rp/textures/blocks/voltage_casings/${voltage}_side.png`,
+                    overlay: `resources/hatches/energy_hatches/amperage1.png`,
+                    path: `textures/blocks/machine_hulls/${hull}.png`
+                }
+            ]
+        }
+    }
+}

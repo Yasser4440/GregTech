@@ -1,7 +1,9 @@
-import fs from "node:fs"
 import { copyExisting } from "./utilities.js"
 import { source_directory } from "./local_settings.js"
 import { make_blocks } from "../source/blocks.js"
+import fs from "node:fs"
+
+// Append a custom log command for success messages
 console.success = (message) => console.info(`\u001b[32m${message}\u001B[37m`)
 
 // Change the current working directory to the source directory (Where addon, assets, and scripts are placed)
@@ -22,10 +24,8 @@ const dev_rp = `${rp_destination}/${rp_pack}`
 // Clean up the output directory
 const output = '../output'
 if (fs.existsSync(output)) fs.rmSync(output, {recursive: true})
-fs.mkdirSync(output, {}, () => {})
+fs.mkdirSync(output)
 
-// RP/texts/en_US.json
-const texts = []
 
 // Generate the addons locally
 function build() {
@@ -34,8 +34,10 @@ function build() {
 
 // Generate the addons in Minecraft
 function deploy() {
-    remove(); console.success("Finished Cleaning")
-    generate(dev_bp, dev_rp); console.success("Finished Reloading")
+    remove()
+    console.success("Finished Cleaning")
+    generate(dev_bp, dev_rp)
+    console.success("Finished Reloading")
 }
 
 // Delete the addons from Minecraft
@@ -60,18 +62,23 @@ function generate(bp, rp) {
     fs.copyFileSync('addon/rp_manifest.json', `${rp}/manifest.json`)
     fs.copyFileSync('addon/pack_icon.png', `${rp}/pack_icon.png`)
 
-    // Copy BP folders from assets
-    copyExisting(fs, 'assets/blocks', `${bp}/blocks`)
-    copyExisting(fs, 'assets/scripts', `${bp}/scripts`)
-    // Copy RP folders from assets
-    copyExisting(fs, 'assets/textures', `${rp}/textures`)
+    // Copy BP and RP folders from assets
+    for (const item of fs.readdirSync('assets/bp')) fs.cpSync(`assets/bp/${item}`, `${bp}/${item}`, { recursive: true })
+    for (const item of fs.readdirSync('assets/rp')) fs.cpSync(`assets/rp/${item}`, `${rp}/${item}`, { recursive: true })
 
-    // DEBUG // this is for adding temporary files to BP and RP for testing and debugging
-    // fs.cpSync('debug/blocks', `${bp}/blocks`, {recursive: true})
+    // Copy BP and RP folders from debug for testing and debugging
+    if (process.argv.includes('--debug')) {
+        for (const item of fs.readdirSync('debug/bp')) fs.cpSync(`debug/bp/${item}`, `${bp}/${item}`, { recursive: true })
+        for (const item of fs.readdirSync('debug/rp')) fs.cpSync(`debug/rp/${item}`, `${rp}/${item}`, { recursive: true })
+    }
+
+    // Prepare a container for the generated translation keys
+    const texts = []
 
     // Generate the block files
     make_blocks(bp, rp, texts)
-    // Generate the lang files
+
+    // Generate the language files
     fs.mkdirSync(`${rp}/texts/`, { recursive: true })
     fs.writeFileSync(`${rp}/texts/en_US.lang`, texts.join('\n'))
 }

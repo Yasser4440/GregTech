@@ -60,18 +60,18 @@ export function make_controllers(blocks) {
             },
             generated: [
                 { action: 'merge',
-                    base: `assets/textures/blocks/casings/${data.casing}.png`,
-                    overlay: `raw_textures/multiblocks/idle/${id}.png`,
+                    base: `assets/rp/textures/blocks/casings/${data.casing}.png`,
+                    overlay: `resources/multiblocks/idle/${id}.png`,
                     path: `textures/blocks/multiblocks/${id}.png`
                 },
                 { action: 'merge',
-                    base: `assets/textures/blocks/casings/${data.casing}.png`,
-                    overlay: `raw_textures/multiblocks/running/${id}.png`,
+                    base: `assets/rp/textures/blocks/casings/${data.casing}.png`,
+                    overlay: `resources/multiblocks/running/${id}.png`,
                     path: `textures/blocks/multiblocks/running/${id}.png`
                 },
                 { action: 'merge',
-                    base: `assets/textures/blocks/casings/${data.casing}.png`,
-                    overlay: `raw_textures/multiblocks/paused/${id}.png`,
+                    base: `assets/rp/textures/blocks/casings/${data.casing}.png`,
+                    overlay: `resources/multiblocks/paused/${id}.png`,
                     path: `textures/blocks/multiblocks/paused/${id}.png`
                 },
             ]
