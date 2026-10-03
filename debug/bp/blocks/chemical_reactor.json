@@ -1,0 +1,25 @@
+{
+    "format_version": "1.26.50",
+    "minecraft:block": {
+        "description": {
+            "identifier": "gregtech:uv_chemical_reactor"
+        },
+        "components": {
+            "minecraft:block_entity": {
+                "dynamic_properties": true,
+                "container": {
+                    "title": "gregtech:chemical_reactor",
+                    "slot_count": 40
+                }
+            },
+            "minecraft:tags": ["UV", "chemical_reactor"],
+            "gregtech:machine": {
+                "type": "chemical_reactor",
+                "tier": "UV"
+            },
+            "minecraft:tick": {
+                "interval_range": [1, 1]
+            }
+        }
+    }
+}

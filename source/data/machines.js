@@ -35,6 +35,18 @@ export function make_hulls(blocks) {
                 '*': `${casing}_side`,
                 south: hull,
             },
+            permutations: [
+                {
+                    condition: "q.block_state('minecraft:facing_direction') == 'up'",
+                    components: {
+                        "minecraft:material_instances": {
+                            up: { texture : `${casing}_top`, render_method: "opaque"},
+                            down: { texture: hull, render_method: "opaque"},
+                            '*': { texture: `${casing}_side`, render_method: "opaque"}
+                        }
+                    }
+                }
+            ],
             textures: {
                 [hull]: `textures/blocks/machine_hulls/${hull}`,
             },

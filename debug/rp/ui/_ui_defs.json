@@ -1,0 +1,8 @@
+{
+  "ui_defs": [
+    "ui/gregtech/gregtech.json",
+
+    "ui/gregtech/machines.json",
+    "ui/gregtech/machines/chemical_reactor.json"
+  ]
+}

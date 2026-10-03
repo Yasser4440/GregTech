@@ -10,7 +10,10 @@ console.success = (message) => console.info(`\u001b[32m${message}\u001B[37m`)
 process.chdir(source_directory)
 
 // Define the paths
-const mc_path = `${process.env.APPDATA}/Minecraft Bedrock/Users/Shared/games/com.mojang`
+const release_path = `${process.env.APPDATA}/Minecraft Bedrock/Users/Shared/games/com.mojang`
+const preview_path = `${process.env.APPDATA}/Minecraft Bedrock Preview/Users/Shared/games/com.mojang`
+const mc_path = process.argv.includes('--preview') ? preview_path : release_path
+
 const bp_destination = `${mc_path}/development_behavior_packs`
 const rp_destination = `${mc_path}/development_resource_packs`
 
@@ -23,12 +26,13 @@ const dev_rp = `${rp_destination}/${rp_pack}`
 
 // Clean up the output directory
 const output = '../output'
-if (fs.existsSync(output)) fs.rmSync(output, {recursive: true})
-fs.mkdirSync(output)
+
 
 
 // Generate the addons locally
 function build() {
+    if (fs.existsSync(output)) fs.rmSync(output, {recursive: true})
+    fs.mkdirSync(output)
     generate(`${output}/${bp_pack}`, `${output}/${rp_pack}`)
 }
 
@@ -66,11 +70,6 @@ function generate(bp, rp) {
     for (const item of fs.readdirSync('assets/bp')) fs.cpSync(`assets/bp/${item}`, `${bp}/${item}`, { recursive: true })
     for (const item of fs.readdirSync('assets/rp')) fs.cpSync(`assets/rp/${item}`, `${rp}/${item}`, { recursive: true })
 
-    // Copy BP and RP folders from debug for testing and debugging
-    if (process.argv.includes('--debug')) {
-        for (const item of fs.readdirSync('debug/bp')) fs.cpSync(`debug/bp/${item}`, `${bp}/${item}`, { recursive: true })
-        for (const item of fs.readdirSync('debug/rp')) fs.cpSync(`debug/rp/${item}`, `${rp}/${item}`, { recursive: true })
-    }
 
     // Prepare a container for the generated translation keys
     const texts = []
@@ -81,6 +80,12 @@ function generate(bp, rp) {
     // Generate the language files
     fs.mkdirSync(`${rp}/texts/`, { recursive: true })
     fs.writeFileSync(`${rp}/texts/en_US.lang`, texts.join('\n'))
+    
+    // Copy BP and RP folders from debug for testing and debugging
+    if (process.argv.includes('--debug')) {
+        for (const item of fs.readdirSync('debug/bp')) fs.cpSync(`debug/bp/${item}`, `${bp}/${item}`, { recursive: true })
+        for (const item of fs.readdirSync('debug/rp')) fs.cpSync(`debug/rp/${item}`, `${rp}/${item}`, { recursive: true })
+    }
 }
 
 // Run the command

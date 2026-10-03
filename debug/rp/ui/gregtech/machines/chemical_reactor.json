@@ -1,0 +1,98 @@
+{
+    "namespace": "gregtech_chemical_reactor",
+
+    "screen@gregtech_machines.screen": {
+        // "$color": [0.682, 0.82, 0.808],
+        "$attachments": [
+            { "title@gregtech_machines.title_bar": {
+                "$text": "Chemical Reactor [UV]",
+                "$text_color": [0, 0.659, 0.659]
+            }}
+        ],
+        "$content": [
+            { "item_inputs": { // 1(18) 2(36) 3(54) 4(72) 5(90) 6(108) 7(126) 8(144) 9(162) 10(180) 11(198) 12(216) 13(234) 14(252) 15(270) 16(288) 17(306) 18(324) 19(342) 20(360)
+                "type": "stack_panel", "orientation": "horizontal",
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [ 8, 25 ],
+                "controls": [
+                    { "item_1@gregtech_machines.item_slot": {
+                        "$index": 0,
+                        "$overlay": "textures/ui/gregtech/slot_overlays/molecule_1"
+                    }},
+                    { "item_2@gregtech_machines.item_slot": {
+                        "$index": 1,
+                        "$overlay": "textures/ui/gregtech/slot_overlays/molecule_2"
+                    }}
+                ]
+            }},
+            { "fluid_inputs": {
+                "type": "stack_panel", "orientation": "horizontal",
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [ 8, 43 ],
+                "controls": [
+                    { "fluid_1@gregtech_machines.fluid_slot": {
+                        "$index": 2,
+                        "$overlay": "textures/ui/gregtech/slot_overlays/molecule_3"
+                    }},
+                    { "fluid_2@gregtech_machines.fluid_slot": {
+                        "$index": 3,
+                        "$overlay": "textures/ui/gregtech/slot_overlays/molecule_3"
+                    }},
+                    { "fluid_3@gregtech_machines.fluid_slot": {
+                        "$index": 4,
+                        "$overlay": "textures/ui/gregtech/slot_overlays/molecule_4"
+                    }}
+                ]
+            }},
+            { "item_outputs": {
+                "type": "stack_panel", "orientation": "horizontal",
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [ 119, 25 ],
+                "controls": [
+                    { "item_1@gregtech_machines.item_slot": {
+                        "$index": 5,
+                        "$overlay": "textures/ui/gregtech/slot_overlays/vial_1"
+                    }},
+                    { "item_2@gregtech_machines.item_slot": {
+                        "$index": 6,
+                        "$overlay": "textures/ui/gregtech/slot_overlays/vial_1"
+                    }}
+                ]
+            }},
+            { "fluid_outputs": {
+                "type": "stack_panel", "orientation": "horizontal",
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [ 119, 43 ],
+                "controls": [
+                    { "fluid_1@gregtech_machines.fluid_slot": {
+                        "$index": 7,
+                        "$overlay": "textures/ui/gregtech/slot_overlays/vial_2"
+                    }},
+                    { "fluid_2@gregtech_machines.fluid_slot": {
+                        "$index": 8,
+                        "$overlay": "textures/ui/gregtech/slot_overlays/vial_2"
+                    }}
+                ]
+            }},
+            { "battery_slot@gregtech_machines.item_slot": {
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [ 77, 64 ],
+                "$index": 9,
+                "$overlay": "textures/ui/gregtech/slot_overlays/energy"
+            }},
+
+            { "progress_bar@gregtech_machines.progress_bar": {
+                "anchor_from": "top_left",
+                "anchor_to": "top_left",
+                "offset": [ 76, 33 ],
+                "$size": [20, 20],
+                "$texture": "textures/ui/gregtech/progress_bars/multiple_arrows"
+            }}
+        ]
+    }
+}

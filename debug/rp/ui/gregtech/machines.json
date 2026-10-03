@@ -1,0 +1,110 @@
+{
+    "namespace": "gregtech_machines",
+
+    "screen": {
+        "type": "panel",        
+        "$size|default": ["100%", 172],
+        "$color|default": [1, 1, 1],
+        "$show_close_button|default": true,
+        "$content|default": [],
+        "$attachments|default": [],
+        "controls": [
+            { "container_gamepad_helpers@common.container_gamepad_helpers": {} },
+            { "selected_item_details_factory@common.selected_item_details_factory": {} },
+            { "item_lock_notification_factory@common.item_lock_notification_factory": {} },
+            { "root_panel@common.root_panel": {
+                "size": [ 176, "100%" ],
+                "layer": 1,
+                "controls": [
+                    { "screen_content": {
+                        "type": "image",
+                        "texture": "textures/ui/dialog_background_opaque",
+                        "color": "$color",
+                        "layer": 1,
+                        "size": "$size",
+                        "controls": [
+                            { "close_button@common.close_button": {
+                                "visible": "$show_close_button"
+                            }},
+                            { "attachments": {
+                                "type": "panel",
+                                "layer": -1,
+                                "controls": "$attachments"
+                            }},
+                            { "top_half": {
+                                "type": "panel",
+                                "layer": 5,
+                                "controls": "$content"
+                            }},
+                            { "inventory_panel_bottom_half_with_label@common.inventory_panel_bottom_half_with_label": {} },
+                            { "hotbar_grid@common.hotbar_grid_template": {} },
+                            { "inventory_take_progress_icon_button@common.inventory_take_progress_icon_button": {} }
+                        ]
+                    }},
+                    { "inventory_selected_icon_button@common.inventory_selected_icon_button": {} },
+                    { "gamepad_cursor@common.gamepad_cursor_button": {} }
+                ]
+            }}
+        ]
+    },
+
+    "title_bar": {
+        "type": "image",
+        "texture": "textures/ui/TabTopFrontLeftMost",
+        "size": ["100%c + 26px", 20],
+        "max_size": ["100%", 20],
+        "anchor_from": "top_middle",
+        "anchor_to": "bottom_middle",
+        "offset": [0, 4],
+
+        "$text_color|default": "$title_text_color",
+
+        "controls": [
+            { "title_text": {
+                "type": "label",
+                "text": "$text",
+                "color": "$text_color"
+            }}
+        ]
+    },
+    
+    "item_slot": {
+        "type": "collection_panel",
+        "collection_name": "container_items",
+        "size": ["100%c", "100%c"],
+
+        "$overlay|default": "unset",
+        "$overlay_texture": "$overlay",
+
+        "controls": [
+            { "slot@chest.chest_grid_item": {
+                "$cell_overlay_ref": "gregtech.overlay_image",
+                "collection_index": "$index"
+            }}
+        ]
+    },
+    
+    "fluid_slot": {
+        "type": "collection_panel",
+        "collection_name": "container_items",
+        "size": ["100%c", "100%c"],
+
+        "$overlay|default": "unset",
+        "$overlay_texture": "$overlay",
+
+        "controls": [
+            { "slot@chest.chest_grid_item": {
+                "$background_images": "gregtech.fluid_slot_background",
+                "$cell_overlay_ref": "gregtech.overlay_image",
+                "collection_index": "$index"
+            }}
+        ]
+    },
+
+    "progress_bar": {
+        "type": "image",
+        "texture": "$texture",
+        "size": "$size",
+        "uv_size": "$size"
+    }
+}
